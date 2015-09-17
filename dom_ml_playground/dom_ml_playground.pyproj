@@ -23,6 +23,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="src\experiments\simple_neural_network\simple_neural_network.py" />
+    <Compile Include="src\tutorials\theano\logistic_regression\theano_logistic_regression.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="data\" />
@@ -30,6 +33,8 @@
     <Folder Include="src\experiments\" />
     <Folder Include="src\experiments\simple_neural_network\" />
     <Folder Include="src\tutorials\" />
+    <Folder Include="src\tutorials\theano\" />
+    <Folder Include="src\tutorials\theano\logistic_regression\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
