@@ -1,22 +1,66 @@
+﻿from abc import ABCMeta, abstractmethod
 import sys
+import uuid
 import timeit
 import numpy
 import theano
 import theano.tensor as T
 
 
-class NeuralNode(object):
-    def __init__(self, incoming, bias, outgoing, activationFn):                
-        self.incoming = incoming
+class NeuronConnection(object):
+    def __init__(self, sender, receiver):
+        self.id = uuid.uuid4()
+        self.sender = sender
+        self.receiver = receiver
+        self.weight = 0.0
+        self.signalSent = 0.0
+        self.signalReceived = 0.0
+
+    def sendSignal(self, value):
+        self.signalSent = value
+        self.signalReceived = self.weight * value
+        self.receiver.receiveSignal(self.id, self.signalReceived)
+
+
+
+class Neuron(object):
+    __metaclass__ = ABCMeta
+    
+    def __init__(self, activationFn, bias):
         self.bias = bias
-        self.outgoing = outgoing
         self.activationFn = activationFn
-        self.threshold = 0.0
-        self.weights = [0] * len(self.incoming)
-        self.weighedAverage = 0.0        
+        self.connections = set()
+        self.accumulatedSignals = 0.0        
         self.output = 0.0
+
+    def fire(self):
+        for c in self.connections:
+            c.sendSignal(c.output)
+
+    # This creates a one way connection from this neuron to the passed in one.
+    def connectTo(self, node):
+        connection = NeuronConnection(self, node)
+        self.connections.add(connection)
+
+    def receiveSignal(self, connectionId, value):
+        self.accumulatedSignals += value
+        self.onSignalReceived(connectionId, value)
+
+    @abstractmethod # TODO: Create a set of optionally overridable methods.
+    def onSignalReceived(self, connectionId, value): pass       
         
-    def readIncoming(self):        
+    
+# This type is like most models. It requires all of the signals to have been received
+# before sending any of its connections.
+class ReceiveAllNeuron(Neuron):
+    def reset(self):
+        pass
+        # gets the neruon ready to fire again
+
+    def onSignalReceived(self):    
+        # TODO: After each signal is recieved, check to see if all the connections
+        # have been recieved. If they have, then execute the code below.
+        # note: don't need to compute weighedAverage anymore    
         self.weighedAverage = 0.0
         
         for nodeIndex in range(len(self.incoming)):
@@ -24,6 +68,8 @@ class NeuralNode(object):
                                self.incoming[nodeIndex].output)
         
         self.output = self.activationFn(self.bias + self.weighedAverage)
+
+
 
 class NetConfig(object):
     def __init__(self):
@@ -50,7 +96,7 @@ class SimpleNeuralNetwork(object):
         for i in range(count):
             # TODO: Need to have a special input node that has no
             #       incoming nodes or bias value.
-            layer.append(NeuralNode()) 
+            layer.append(Neuron()) 
 
 
 
