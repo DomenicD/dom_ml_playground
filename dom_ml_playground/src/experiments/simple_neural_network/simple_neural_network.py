@@ -24,7 +24,7 @@ class NeuronConnection(object):
 
 
 class Neuron(object):
-    __metaclass__ = ABCMeta
+    # __metaclass__ = ABCMeta
     
     def __init__(self, activationFn, bias):
         self.bias = bias
@@ -41,33 +41,65 @@ class Neuron(object):
     def connectTo(self, node):
         connection = NeuronConnection(self, node)
         self.connections.add(connection)
+        self.onConnectionAdded(connection)
+
+        # This creates a one way connection from this neuron to the passed in one.
+    def removeConnection(self, connection):
+        self.connections.remove(connection)
+        self.onConnectionRemoved(connection)
 
     def receiveSignal(self, connectionId, value):
         self.accumulatedSignals += value
         self.onSignalReceived(connectionId, value)
 
-    @abstractmethod # TODO: Create a set of optionally overridable methods.
-    def onSignalReceived(self, connectionId, value): pass       
+    def onConnectionAdded(self, connection): pass
+
+    def onConnectionRemoved(self, connection): pass
+    
+    def onSignalReceived(self, connectionId, value): pass
+
+    
         
     
 # This type is like most models. It requires all of the signals to have been received
 # before sending any of its connections.
 class ReceiveAllNeuron(Neuron):
-    def reset(self):
-        pass
-        # gets the neruon ready to fire again
-
-    def onSignalReceived(self):    
-        # TODO: After each signal is recieved, check to see if all the connections
-        # have been recieved. If they have, then execute the code below.
-        # note: don't need to compute weighedAverage anymore    
+    def __init__(self, activationFn, bias):
         self.weighedAverage = 0.0
-        
-        for nodeIndex in range(len(self.incoming)):
-            self.weighedAverage += (self.weights[nodeIndex] *
-                               self.incoming[nodeIndex].output)
-        
+        self.signalReceivedMap = {}
+
+
+    def reset(self):
+        # gets the neruon ready to fire again
+        self.weighedAverage = 0.0
+        for key in self.signalReceivedMap:
+            self.signalReceivedMap[key] = False
+
+
+    def onConnectionAdded(self, connection):
+        self.signalReceivedMap[connection.id] = False
+
+
+    def onConnectionRemoved(self, connection):
+        self.signalReceivedMap.pop(connection.id, None)
+
+
+    def onSignalReceived(self, connectionId, value):
+        # If all signals have been received, the output is set
+        # and the node fires.         
+        if (self.signalReceivedMap[connectionId]): return
+
+        self.signalReceivedMap[connectionId] = True
+        self.weighedAverage += value
+
+        if (not self.allSignalsReceived()): return
+               
         self.output = self.activationFn(self.bias + self.weighedAverage)
+        self.fire()        
+
+
+    def allSignalsReceived(self):
+        return all(self.signalReceivedMap.values())
 
 
 
@@ -80,7 +112,8 @@ class NetConfig(object):
         self.hiddenActivationFn = None # TODO: choose a default
         self.outputActivationFn = None # TODO: choose a default
 
-class SimpleNeuralNetwork(object):
+
+class SimpleFeedForwardNN(object):
     def __init__(self, config):
         self.inputLayer = self.createLayer(config.inputCount,
                                            config.inputActivationFn)
