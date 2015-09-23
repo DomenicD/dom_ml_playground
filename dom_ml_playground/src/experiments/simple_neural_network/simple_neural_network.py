@@ -16,6 +16,7 @@ class NeuronConnection(object):
         self.signalSent = 0.0
         self.signalReceived = 0.0
 
+
     def sendSignal(self, value):
         self.signalSent = value
         self.signalReceived = self.weight * value
@@ -26,35 +27,64 @@ class NeuronConnection(object):
 class Neuron(object):
     # __metaclass__ = ABCMeta
     
-    def __init__(self, activationFn, bias):
+    def __init__(self, activationFn, bias = 0.0):
         self.bias = bias
         self.activationFn = activationFn
-        self.connections = set()
+        self.outboundConnections = set()
+        self.inboundConnections = set()
         self.accumulatedSignals = 0.0        
         self.output = 0.0
 
+
     def fire(self):
-        for c in self.connections:
+        for c in self.outboundConnections:
             c.sendSignal(c.output)
+
 
     # This creates a one way connection from this neuron to the passed in one.
     def connectTo(self, node):
         connection = NeuronConnection(self, node)
-        self.connections.add(connection)
-        self.onConnectionAdded(connection)
+        self.addInboundConnection.add(connection)
+        node.addIncomingConnection(connection)
+        self.onOutboundConnectionAdded(connection)
 
-        # This creates a one way connection from this neuron to the passed in one.
+
+    def addInboundConnection(self, connection):
+        self.inboundConnections.add(connection)
+        self.onInboundConnectionAdded(connection)
+
+
     def removeConnection(self, connection):
-        self.connections.remove(connection)
-        self.onConnectionRemoved(connection)
+        connection.sender.removeOutboundConnection(connection)
+        connection.receiver.removeInboundConnection(connection)
+
+
+    def removeOutboundConnection(self, connection):
+        self.outboundConnections.remove(connection)
+        self.onOutboundConnectionRemoved(connection)
+
+
+    def removeInboundConnection(self, connection):
+        self.inboundConnections.remove(connection)
+        self.onInboundConnectionRemoved(connection)
+
 
     def receiveSignal(self, connectionId, value):
         self.accumulatedSignals += value
         self.onSignalReceived(connectionId, value)
 
-    def onConnectionAdded(self, connection): pass
 
-    def onConnectionRemoved(self, connection): pass
+    def onInboundConnectionAdded(self, connection): pass
+
+
+    def onInboundConnectionRemoved(self, connection): pass
+
+
+    def onOutboundConnectionAdded(self, connection): pass
+
+
+    def onOutboundConnectionRemoved(self, connection): pass
+
     
     def onSignalReceived(self, connectionId, value): pass
 
@@ -66,30 +96,30 @@ class Neuron(object):
 class ReceiveAllNeuron(Neuron):
     def __init__(self, activationFn, bias):
         self.weighedAverage = 0.0
-        self.signalReceivedMap = {}
+        self.signalReceivedTracker = {}
 
 
     def reset(self):
         # gets the neruon ready to fire again
         self.weighedAverage = 0.0
-        for key in self.signalReceivedMap:
-            self.signalReceivedMap[key] = False
+        for key in self.signalReceivedTracker:
+            self.signalReceivedTracker[key] = False
 
 
-    def onConnectionAdded(self, connection):
-        self.signalReceivedMap[connection.id] = False
+    def onInboundConnectionAdded(self, connection):
+        self.signalReceivedTracker[connection.id] = False
 
 
-    def onConnectionRemoved(self, connection):
-        self.signalReceivedMap.pop(connection.id, None)
+    def onInboundConnectionRemoved(self, connection):
+        self.signalReceivedTracker.pop(connection.id, None)
 
 
     def onSignalReceived(self, connectionId, value):
         # If all signals have been received, the output is set
         # and the node fires.         
-        if (self.signalReceivedMap[connectionId]): return
+        if (self.signalReceivedTracker[connectionId]): return
 
-        self.signalReceivedMap[connectionId] = True
+        self.signalReceivedTracker[connectionId] = True
         self.weighedAverage += value
 
         if (not self.allSignalsReceived()): return
@@ -99,7 +129,7 @@ class ReceiveAllNeuron(Neuron):
 
 
     def allSignalsReceived(self):
-        return all(self.signalReceivedMap.values())
+        return all(self.signalReceivedTracker.values())
 
 
 
@@ -114,23 +144,18 @@ class NetConfig(object):
 
 
 class SimpleFeedForwardNN(object):
-    def __init__(self, config):
-        self.inputLayer = self.createLayer(config.inputCount,
-                                           config.inputActivationFn)
+    def __init__(self, nHidden = 5):
+        self.input = ReceiveAllNeuron(lambda x: x)
+        # TODO: Implement the activation functions using your own methods, then
+        # make one that uses the theano methods.
+        self.hidden = [ReceiveAllNeuron(T.nnet.sigmoid) for n in range(nHidden)]
+        self.output = ReceiveAllNeuron(T.nnet.softplus)
 
-        self.hiddenLayer = self.createLayer(config.hiddenCount,
-                                           config.hiddenActivationFn)
 
-        self.outputLayer = self.createLayer(config.outputCount,
-                                           config.outputActivationFn)
-
-    def createLayer(self, count, activationFn):
-        layer = []
-        for i in range(count):
-            # TODO: Need to have a special input node that has no
-            #       incoming nodes or bias value.
-            layer.append(Neuron()) 
-
+# TASK
+# 1) Implement a simple feed forward neural network
+# 2) Implement a backpropagation training algorithm for the simple network
+# 3) Train the network to represent a simple forth degree quadratic function
 
 
 """
