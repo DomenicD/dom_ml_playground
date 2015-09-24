@@ -10,10 +10,10 @@ import numpy
 
 class NeuronConnection(object):
     def __init__(self, sender, receiver):
-        self.id = uuid.uuid4()
+        self.id = uuid.uuid4().hex
         self.sender = sender
         self.receiver = receiver
-        self.weight = 0.0
+        self.weight = 1.0
         self.signalSent = 0.0
         self.signalReceived = 0.0
 
@@ -22,6 +22,10 @@ class NeuronConnection(object):
         self.signalSent = value
         self.signalReceived = self.weight * value
         self.receiver.receiveSignal(self.id, self.signalReceived)
+
+    def disconnect(self):
+        self.sender.removeOutbound(self)
+        self.receiver.removeInbound(self)
 
 
 
@@ -39,15 +43,16 @@ class Neuron(object):
 
     def fire(self):
         for c in self.outConnections:
-            c.sendSignal(c.output)
+            c.sendSignal(self.output)
 
 
     # This creates a one way connection from this neuron to the passed in one.
     def connectTo(self, node):
         connection = NeuronConnection(self, node)
         self.addOutbound(connection)
-        node.addInbound(connection)
-        self.onOutboundAdded(connection)
+        node.addInbound(connection)        
+        return connection    
+
 
     def addOutbound(self, connection):
         self.outConnections.add(connection)
@@ -56,12 +61,7 @@ class Neuron(object):
 
     def addInbound(self, connection):
         self.inConnections.add(connection)
-        self.onInboundAdded(connection)
-
-
-    def removeConnection(self, connection):
-        connection.sender.removeOutbound(connection)
-        connection.receiver.removeInbound(connection)
+        self.onInboundAdded(connection)    
 
 
     def removeOutbound(self, connection):
@@ -76,22 +76,14 @@ class Neuron(object):
 
     def receiveSignal(self, connectionId, value):
         self.accumulatedSignals += value
-        self.onSignalReceived(connectionId, value)
+        self.onSignalReceived(value, connectionId)
 
-
+    # Overridable event methods
     def onInboundAdded(self, connection): pass
-
-
     def onInboundRemoved(self, connection): pass
-
-
     def onOutboundAdded(self, connection): pass
-
-
     def onOutboundRemoved(self, connection): pass
-
-    
-    def onSignalReceived(self, connectionId, value): pass
+    def onSignalReceived(self, value, connectionId): pass
 
     
         
@@ -109,11 +101,12 @@ class ReceiveAllNeuron(Neuron):
     def reset(self):
         # gets the neruon ready to fire again
         self.weighedAverage = 0.0
+        self.output = 0.0
         for key in self.signalReceivedTracker:
             self.signalReceivedTracker[key] = False
 
 
-    def onInboundConnectionAdded(self, connection):
+    def onInboundAdded(self, connection):
         self.signalReceivedTracker[connection.id] = False
 
 
@@ -121,10 +114,11 @@ class ReceiveAllNeuron(Neuron):
         self.signalReceivedTracker.pop(connection.id, None)
 
 
-    def onSignalReceived(self, connectionId, value):
+    def onSignalReceived(self, value, connectionId = None):
         # If all signals have been received, the output is set
         # and the node fires.         
-        if (self.signalReceivedTracker[connectionId]): return
+        if (len(self.signalReceivedTracker) and 
+            self.signalReceivedTracker[connectionId]): return
 
         self.signalReceivedTracker[connectionId] = True
         self.weighedAverage += value
