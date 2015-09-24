@@ -1,10 +1,11 @@
 ﻿from abc import ABCMeta, abstractmethod
+import math
 import sys
 import uuid
 import timeit
 import numpy
-import theano
-import theano.tensor as T
+# import theano
+# import theano.tensor as T
 
 
 class NeuronConnection(object):
@@ -30,43 +31,47 @@ class Neuron(object):
     def __init__(self, activationFn, bias = 0.0):
         self.bias = bias
         self.activationFn = activationFn
-        self.outboundConnections = set()
-        self.inboundConnections = set()
+        self.outConnections = set()
+        self.inConnections = set()
         self.accumulatedSignals = 0.0        
         self.output = 0.0
 
 
     def fire(self):
-        for c in self.outboundConnections:
+        for c in self.outConnections:
             c.sendSignal(c.output)
 
 
     # This creates a one way connection from this neuron to the passed in one.
     def connectTo(self, node):
         connection = NeuronConnection(self, node)
-        self.addInboundConnection.add(connection)
-        node.addIncomingConnection(connection)
-        self.onOutboundConnectionAdded(connection)
+        self.addOutbound(connection)
+        node.addInbound(connection)
+        self.onOutboundAdded(connection)
+
+    def addOutbound(self, connection):
+        self.outConnections.add(connection)
+        self.onOutboundAdded(connection)
 
 
-    def addInboundConnection(self, connection):
-        self.inboundConnections.add(connection)
-        self.onInboundConnectionAdded(connection)
+    def addInbound(self, connection):
+        self.inConnections.add(connection)
+        self.onInboundAdded(connection)
 
 
     def removeConnection(self, connection):
-        connection.sender.removeOutboundConnection(connection)
-        connection.receiver.removeInboundConnection(connection)
+        connection.sender.removeOutbound(connection)
+        connection.receiver.removeInbound(connection)
 
 
-    def removeOutboundConnection(self, connection):
-        self.outboundConnections.remove(connection)
-        self.onOutboundConnectionRemoved(connection)
+    def removeOutbound(self, connection):
+        self.outConnections.remove(connection)
+        self.onOutboundRemoved(connection)
 
 
-    def removeInboundConnection(self, connection):
-        self.inboundConnections.remove(connection)
-        self.onInboundConnectionRemoved(connection)
+    def removeInbound(self, connection):
+        self.inConnections.remove(connection)
+        self.onInboundRemoved(connection)
 
 
     def receiveSignal(self, connectionId, value):
@@ -74,16 +79,16 @@ class Neuron(object):
         self.onSignalReceived(connectionId, value)
 
 
-    def onInboundConnectionAdded(self, connection): pass
+    def onInboundAdded(self, connection): pass
 
 
-    def onInboundConnectionRemoved(self, connection): pass
+    def onInboundRemoved(self, connection): pass
 
 
-    def onOutboundConnectionAdded(self, connection): pass
+    def onOutboundAdded(self, connection): pass
 
 
-    def onOutboundConnectionRemoved(self, connection): pass
+    def onOutboundRemoved(self, connection): pass
 
     
     def onSignalReceived(self, connectionId, value): pass
@@ -94,7 +99,9 @@ class Neuron(object):
 # This type is like most models. It requires all of the signals to have been received
 # before sending any of its connections.
 class ReceiveAllNeuron(Neuron):
-    def __init__(self, activationFn, bias):
+    def __init__(self, activationFn, bias = 0.0):
+        # Call inherited class.
+        Neuron.__init__(self, activationFn, bias)
         self.weighedAverage = 0.0
         self.signalReceivedTracker = {}
 
@@ -110,7 +117,7 @@ class ReceiveAllNeuron(Neuron):
         self.signalReceivedTracker[connection.id] = False
 
 
-    def onInboundConnectionRemoved(self, connection):
+    def onInboundRemoved(self, connection):
         self.signalReceivedTracker.pop(connection.id, None)
 
 
@@ -144,13 +151,31 @@ class NetConfig(object):
 
 
 class SimpleFeedForwardNN(object):
-    def __init__(self, nHidden = 5):
-        self.input = ReceiveAllNeuron(lambda x: x)
+    def __init__(self, normalizers, nHidden = 5):
+        self.input = ReceiveAllNeuron(normalizers['in'])
         # TODO: Implement the activation functions using your own methods, then
         # make one that uses the theano methods.
-        self.hidden = [ReceiveAllNeuron(T.nnet.sigmoid) for n in range(nHidden)]
-        self.output = ReceiveAllNeuron(T.nnet.softplus)
+        self.hidden = [ReceiveAllNeuron(sigmoid) for n in range(nHidden)]
+        self.output = ReceiveAllNeuron(normalizers['out'])
 
+        # Connect the neurons
+        for h in self.hidden:
+            self.input.connectTo(h)
+            h.connectTo(self.output)
+
+
+def sigmoid(x): 1.0 / (1.0 + math.exp(x))
+
+def normalizers(range, offset):
+    return {
+        'in': lambda x: (x + offset) / range,
+        'out': lambda x: (x * range) - offset
+        }
+
+
+if (__name__ == '__main__'):
+    net = SimpleFeedForwardNN(normalizers(2, 1))
+    testFn = lambda x: math.sin(x)
 
 # TASK
 # 1) Implement a simple feed forward neural network

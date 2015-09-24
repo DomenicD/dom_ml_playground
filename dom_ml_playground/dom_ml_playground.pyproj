@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>9d7ea3e6-d46f-4fd2-b022-c548a7ac450f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>src\experiments\simple_neural_network\simple_neural_network.py</StartupFile>
+    <StartupFile>src\experiments\simple_neural_network\simple_neural_network_test.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,6 +22,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="src\experiments\simple_neural_network\simple_neural_network_test.py" />
     <Compile Include="src\experiments\simple_neural_network\simple_neural_network.py" />
     <Compile Include="src\tutorials\theano\logistic_regression\theano_logistic_regression.py">
       <SubType>Code</SubType>
