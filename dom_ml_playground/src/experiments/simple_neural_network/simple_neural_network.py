@@ -176,9 +176,9 @@ if (__name__ == '__main__'):
     testFn = lambda x: math.sin(x)
 
 # TASK
-# 1) Implement a simple feed forward neural network
+# 1) [Done] Implement a simple feed forward neural network
 # 2) Implement a backpropagation training algorithm for the simple network
-# 3) Train the network to represent a simple forth degree quadratic function
+# 3) Train simple network to represent a simple forth degree quadratic function
 
 
 """
