@@ -19,9 +19,9 @@ class NeuronConnection(object):
 
 
     def sendSignal(self, value):
-        self.signalSent = value
-        self.signalReceived = self.weight * value
-        self.receiver.receiveSignal(self.id, self.signalReceived)
+        self.signalReceived = value
+        self.signalSent = value * self.weight        
+        self.receiver.receiveSignal(self.signalSent, self.id)
 
     def disconnect(self):
         self.sender.removeOutbound(self)
@@ -74,7 +74,7 @@ class Neuron(object):
         self.onInboundRemoved(connection)
 
 
-    def receiveSignal(self, connectionId, value):
+    def receiveSignal(self, value, connectionId = None):
         self.accumulatedSignals += value
         self.onSignalReceived(value, connectionId)
 
@@ -114,13 +114,15 @@ class ReceiveAllNeuron(Neuron):
         self.signalReceivedTracker.pop(connection.id, None)
 
 
-    def onSignalReceived(self, value, connectionId = None):
+    def onSignalReceived(self, value, connectionId):
         # If all signals have been received, the output is set
         # and the node fires.         
         if (len(self.signalReceivedTracker) and 
             self.signalReceivedTracker[connectionId]): return
 
-        self.signalReceivedTracker[connectionId] = True
+        if (connectionId):
+            self.signalReceivedTracker[connectionId] = True
+
         self.weighedAverage += value
 
         if (not self.allSignalsReceived()): return
@@ -144,6 +146,7 @@ class NetConfig(object):
         self.outputActivationFn = None # TODO: choose a default
 
 
+
 class SimpleFeedForwardNN(object):
     def __init__(self, normalizers, nHidden = 5):
         self.input = ReceiveAllNeuron(normalizers['in'])
@@ -158,7 +161,8 @@ class SimpleFeedForwardNN(object):
             h.connectTo(self.output)
 
 
-def sigmoid(x): 1.0 / (1.0 + math.exp(x))
+def sigmoid(x):
+    return 1.0 / (1.0 + math.exp(x))
 
 def normalizers(range, offset):
     return {
