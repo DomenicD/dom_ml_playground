@@ -4,6 +4,11 @@ import numpy
 from src.experiments.neural_networks.neurons import ReceiveAllNeuron
 
 
+class NeuralNetwork(object):
+    def __init__(self):
+        pass
+
+
 class SimpleFeedForwardNN(object):
     def __init__(self, normalizers, nHidden = 5):
         self.input = ReceiveAllNeuron(normalizers['in'])
