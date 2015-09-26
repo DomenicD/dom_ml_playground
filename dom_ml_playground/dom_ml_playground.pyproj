@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>9d7ea3e6-d46f-4fd2-b022-c548a7ac450f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>src\experiments\simple_neural_network\simple_neural_network_test.py</StartupFile>
+    <StartupFile>src\experiments\neural_networks\feed_forward\simple_feed_forward_test.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,9 +22,31 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="src\experiments\simple_neural_network\simple_neural_network_test.py" />
-    <Compile Include="src\experiments\simple_neural_network\simple_neural_network.py" />
+    <Compile Include="src\experiments\learning_algorithms\backpropagation.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\experiments\neural_networks\feed_forward\simple_feed_forward_test.py" />
+    <Compile Include="src\experiments\neural_networks\feed_forward\simple_feed_forward.py" />
+    <Compile Include="src\experiments\neural_networks\feed_forward\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\experiments\neural_networks\neurons.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\experiments\neural_networks\neurons_test.py" />
+    <Compile Include="src\experiments\learning_algorithms\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\experiments\neural_networks\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\experiments\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="src\tutorials\theano\logistic_regression\theano_logistic_regression.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\__init__.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -32,7 +54,9 @@
     <Folder Include="data\" />
     <Folder Include="src\" />
     <Folder Include="src\experiments\" />
-    <Folder Include="src\experiments\simple_neural_network\" />
+    <Folder Include="src\experiments\learning_algorithms\" />
+    <Folder Include="src\experiments\neural_networks\" />
+    <Folder Include="src\experiments\neural_networks\feed_forward\" />
     <Folder Include="src\tutorials\" />
     <Folder Include="src\tutorials\theano\" />
     <Folder Include="src\tutorials\theano\logistic_regression\" />

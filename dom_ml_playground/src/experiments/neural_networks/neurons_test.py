@@ -1,10 +1,10 @@
 ﻿import unittest
-import simple_neural_network as snn
+from neurons import ReceiveAllNeuron
 
 class ReceiveAllNeuronTest(unittest.TestCase):
     def test_connectTo(self):
-        sender = snn.ReceiveAllNeuron(lambda x: x)
-        receiver = snn.ReceiveAllNeuron(lambda x: x)
+        sender = ReceiveAllNeuron(lambda x: x)
+        receiver = ReceiveAllNeuron(lambda x: x)
         sender.connectTo(receiver)
 
         self.assertEqual(len(sender.outConnections), 1)
@@ -14,8 +14,8 @@ class ReceiveAllNeuronTest(unittest.TestCase):
 
 
     def test_removeConnection(self):
-        sender = snn.ReceiveAllNeuron(lambda x: x)
-        receiver = snn.ReceiveAllNeuron(lambda x: x)
+        sender = ReceiveAllNeuron(lambda x: x)
+        receiver = ReceiveAllNeuron(lambda x: x)
         connection = sender.connectTo(receiver)
 
         connection.disconnect()
@@ -27,9 +27,9 @@ class ReceiveAllNeuronTest(unittest.TestCase):
 
 
     def test_wait_for_all_signals(self):
-        sender_1 = snn.ReceiveAllNeuron(lambda x: x)
-        sender_2 = snn.ReceiveAllNeuron(lambda x: x)
-        receiver = snn.ReceiveAllNeuron(lambda x: x)
+        sender_1 = ReceiveAllNeuron(lambda x: x)
+        sender_2 = ReceiveAllNeuron(lambda x: x)
+        receiver = ReceiveAllNeuron(lambda x: x)
 
         sender_1.connectTo(receiver)
         sender_2.connectTo(receiver)
@@ -53,8 +53,8 @@ class ReceiveAllNeuronTest(unittest.TestCase):
 
 
     def test_connection(self):
-        sender = snn.ReceiveAllNeuron(lambda x: x)
-        receiver = snn.ReceiveAllNeuron(lambda x: x)
+        sender = ReceiveAllNeuron(lambda x: x)
+        receiver = ReceiveAllNeuron(lambda x: x)
         connection = sender.connectTo(receiver)
 
         self.assertEqual(connection.sender, sender)
@@ -69,26 +69,6 @@ class ReceiveAllNeuronTest(unittest.TestCase):
         self.assertEqual(connection.weight, 0.5)
         self.assertEqual(connection.signalSent, 3.7)
         self.assertEqual(connection.signalReceived, 7.4)
-
-
-class SimpleFeedForwardNNTest(unittest.TestCase):
-    def test_input_passes_through_network(self):
-        normalizers = snn.normalizers(2, 1)
-        network = snn.SimpleFeedForwardNN(normalizers)
-
-        network.input.receiveSignal(5.0)
-
-        self.assertNotAlmostEqual(network.output.output, 0.0)
-        connections = (list(network.input.outConnections) + 
-                       list(network.output.outConnections))
-
-        for h in network.hidden:
-            connections += h.outConnections
-
-        sentSignals = [c.signalSent for c in connections]
-        self.assertTrue(s != 0.0 for s in sentSignals)
-
-
 
 
 if __name__ == '__main__':

@@ -1,12 +1,4 @@
-﻿from abc import ABCMeta, abstractmethod
-import math
-import sys
 import uuid
-import timeit
-import numpy
-# import theano
-# import theano.tensor as T
-
 
 class NeuronConnection(object):
     def __init__(self, sender, receiver):
@@ -85,8 +77,8 @@ class Neuron(object):
     def onOutboundRemoved(self, connection): pass
     def onSignalReceived(self, value, connectionId): pass
 
-    
-        
+
+            
     
 # This type is like most models. It requires all of the signals to have been received
 # before sending any of its connections.
@@ -133,55 +125,3 @@ class ReceiveAllNeuron(Neuron):
 
     def allSignalsReceived(self):
         return all(self.signalReceivedTracker.values())
-
-
-
-class NetConfig(object):
-    def __init__(self):
-        self.inputCount = 0
-        self.hiddenCount = 0
-        self.outputCount = 0
-        self.inputActivationFn = None # TODO: choose a default
-        self.hiddenActivationFn = None # TODO: choose a default
-        self.outputActivationFn = None # TODO: choose a default
-
-
-
-class SimpleFeedForwardNN(object):
-    def __init__(self, normalizers, nHidden = 5):
-        self.input = ReceiveAllNeuron(normalizers['in'])
-        # TODO: Implement the activation functions using your own methods, then
-        # make one that uses the theano methods.
-        self.hidden = [ReceiveAllNeuron(sigmoid) for n in range(nHidden)]
-        self.output = ReceiveAllNeuron(normalizers['out'])
-
-        # Connect the neurons
-        for h in self.hidden:
-            self.input.connectTo(h)
-            h.connectTo(self.output)
-
-
-def sigmoid(x):
-    return 1.0 / (1.0 + math.exp(x))
-
-def normalizers(range, offset):
-    return {
-        'in': lambda x: (x + offset) / range,
-        'out': lambda x: (x * range) - offset
-        }
-
-
-if (__name__ == '__main__'):
-    net = SimpleFeedForwardNN(normalizers(2, 1))
-    testFn = lambda x: math.sin(x)
-
-# TASK
-# 1) [Done] Implement a simple feed forward neural network
-# 2) Implement a backpropagation training algorithm for the simple network
-# 3) Train simple network to represent a simple forth degree quadratic function
-
-
-"""
-    http://www.iro.umontreal.ca/~bengioy/dlbook/mlp.html#pf2
-    f?(x) = b + V sigmoid(c + W x),
-"""
