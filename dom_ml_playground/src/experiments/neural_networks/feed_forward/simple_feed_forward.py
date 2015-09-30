@@ -6,7 +6,14 @@ from src.experiments.neural_networks.neurons import ReceiveAllNeuron
 
 class NeuralNetwork(object):
     def __init__(self):
-        pass
+        self.inputLayer = []
+        # TODO: Implement the activation functions using your own methods, then
+        # make one that uses the theano methods.
+        self.hiddenLayers = []
+        self.outputLayer = []
+
+    def prepairForInput(self): pass
+
 
 
 class SimpleFeedForwardNN(object):

@@ -1,4 +1,4 @@
-import uuid
+﻿import uuid
 
 class NeuronConnection(object):
     def __init__(self, sender, receiver):
@@ -25,6 +25,7 @@ class Neuron(object):
     # __metaclass__ = ABCMeta
     
     def __init__(self, activationFn, bias = 0.0):
+        self.id = uuid.uuid4().hex
         self.bias = bias
         self.activationFn = activationFn
         self.outConnections = set()
