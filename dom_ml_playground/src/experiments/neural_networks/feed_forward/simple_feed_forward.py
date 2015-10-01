@@ -6,38 +6,80 @@ from src.experiments.neural_networks.neurons import ReceiveAllNeuron
 
 class NeuralNetwork(object):
     def __init__(self):
-        self.inputLayer = []
-        # TODO: Implement the activation functions using your own methods, then
-        # make one that uses the theano methods.
-        self.hiddenLayers = []
-        self.outputLayer = []
+        self.layers = []
+    
+    @property
+    def inputs(self):
+        nLayers = self._layers.count
+        if nLayers > 0: return self.layers[0]
+        else: return []        
 
+
+    @property
+    def outputs(self):
+        nLayers = self.layers.count
+        if nLayers > 0: return self.layers[nLayers - 1]
+        else: return []        
+
+
+    def addLayer(self, layer):
+        self.layers.append(layer)
+
+    def createLayer(self, count, neuronConstructor):
+        return [neuronConstructor() for n in range(count)]
+        
     def prepairForInput(self): pass
 
 
 
-class SimpleFeedForwardNN(object):
-    def __init__(self, normalizers, nHidden = 5):
-        self.input = ReceiveAllNeuron(normalizers['in'])
-        # TODO: Implement the activation functions using your own methods, then
-        # make one that uses the theano methods.
-        self.hidden = [ReceiveAllNeuron(sigmoid) for n in range(nHidden)]
-        self.output = ReceiveAllNeuron(normalizers['out'])
+class SimpleFeedForwardNN(NeuralNetwork):
+    def __init__(self, normalizer, structure = [1, 5, 1]):
+        # Call inherited class.
+        NeuralNetwork.__init__(self)
+        lastLayerIndex = len(structure) - 1
 
+        for i in range(structure):
+            nNeurons = structure[i]
+            neuronConstructor = None
+            if i == 0:
+                neuronConstructor = (
+                    lambda : ReceiveAllNeuron(normalizer.input))
+            elif i == lastLayerIndex:
+                neuronConstructor = (
+                    lambda : ReceiveAllNeuron(normalizer.output))
+            else:
+                neuronConstructor = (
+                    lambda : ReceiveAllNeuron(sigmoid))
+
+            self.addLayer(
+                self.createLayer(nNeurons, neuronConstructor))
+            
+            self.connectNeurons()
+
+    
+    def connectNeurons(self):
         # Connect the neurons
-        for h in self.hidden:
-            self.input.connectTo(h)
-            h.connectTo(self.output)
+        for iLayer in range(self.layers.count - 1):
+            for sender in self.layers[iLayer]:
+                for reciever in self.layers[iLayer + 1]:
+                    sender.connectTo(reciever)
 
 
 def sigmoid(x):
     return 1.0 / (1.0 + math.exp(x))
 
-def normalizers(range, offset):
-    return {
-        'in': lambda x: (x + offset) / range,
-        'out': lambda x: (x * range) - offset
-        }
+class Normalizer(object):
+    def __init__(self, range, offset):
+        self.range = range
+        self.offset = offset
+    
+    
+    def input(self, x):
+        return (x + self.offset) / self.range
+    
+        
+    def output(self, x):
+        return (x * range) - offset
 
 
 if (__name__ == '__main__'):

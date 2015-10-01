@@ -8,10 +8,11 @@
 class NeuronStat(object):
     def __init__(self, nodeId):
         self.nodeId = nodeId
+        self.reset()
         
 
     def reset(self):
-        self.errorSignal = None
+        self.error = None
         self.weightDelta = None
 
 
@@ -19,6 +20,8 @@ class Expectation(object):
     def __init__(self, inputs, outputs):
         self.inputs = inputs
         self.outputs = outputs
+
+
 
 
 class Backpropagator(object):
@@ -57,15 +60,37 @@ class Backpropagator(object):
         here is where we will perform one propagation iteration
         adjusting the networks's node weights
         """
-        for i in range(len(neuralNetwork.inputLayer)):
+        # TODO: Still working on implementing the backpropagation
+        #       process. Need to have generic way of traversing
+        #       a NN to apply the changes.
+        for i in range(len(neuralNetwork.outputLayer)):
             neuron = neuralNetwork.outputLayer[i]
-            expectation = expectations[i]
-            neuronStat = self.nodeStats.setdefault(
-                neuron.id, NeuronStat(neuron.id))
-            neuronStat.reset()
+            expectation = expectations[i]            
+            neuron.error = self.outputError(
+                neuron, expectation)
+
+
+
+    
+    def weightAdjustment(self, connection, learningRate):        
+        return (learningRate * 
+                connection.receiver.error * 
+                connection.signalReceived)
         
 
-    def getOutputErrorSignal(self, node, expected):
-        pass
+    def outputError(self, neuron, expectation):
+        actual = neuron.output
+        return ((expectation - actual) * 
+                neuron.activation.derivative(actual))
+
+
+    def hiddenError(self, neuron, expectation):
+        actual = neuron.output
+        weightedErrorSum = reduce(
+            lambda sum, c: sum + c.weight * c.receiver.error, 
+            neuron.outConnections)
+
+        return (weightedErrorSum *
+                neuron.activation.derivative(actual))
 
     

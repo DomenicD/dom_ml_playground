@@ -1,5 +1,11 @@
 ﻿import uuid
 
+class NeuronActivation(object):
+    def __init__(self, fn, derivative):
+        self.fn = fn
+        self.derivative = derivative
+
+
 class NeuronConnection(object):
     def __init__(self, sender, receiver):
         self.id = uuid.uuid4().hex
@@ -24,14 +30,12 @@ class NeuronConnection(object):
 class Neuron(object):
     # __metaclass__ = ABCMeta
     
-    def __init__(self, activationFn, bias = 0.0):
-        self.id = uuid.uuid4().hex
-        self.bias = bias
-        self.activationFn = activationFn
+    def __init__(self, activation):
+        self.id = uuid.uuid4().hex        
+        self.activation = activation
         self.outConnections = set()
         self.inConnections = set()
-        self.accumulatedSignals = 0.0        
-        self.output = 0.0
+        self.reset()
 
 
     def fire(self):
@@ -68,8 +72,14 @@ class Neuron(object):
 
 
     def receiveSignal(self, value, connectionId = None):
-        self.accumulatedSignals += value
+        self.accumulatedInputSignals += value
         self.onSignalReceived(value, connectionId)
+
+    def reset(self):
+        self.accumulatedInputSignals = 0.0
+        self.output = 0.0
+        self.error = 0.0
+        self.onReset()
 
     # Overridable event methods
     def onInboundAdded(self, connection): pass
@@ -77,6 +87,7 @@ class Neuron(object):
     def onOutboundAdded(self, connection): pass
     def onOutboundRemoved(self, connection): pass
     def onSignalReceived(self, value, connectionId): pass
+    def onReset(self): pass
 
 
             
@@ -84,14 +95,14 @@ class Neuron(object):
 # This type is like most models. It requires all of the signals to have been received
 # before sending any of its connections.
 class ReceiveAllNeuron(Neuron):
-    def __init__(self, activationFn, bias = 0.0):
+    def __init__(self, activation):
         # Call inherited class.
-        Neuron.__init__(self, activationFn, bias)
+        Neuron.__init__(self, activation)
         self.weighedAverage = 0.0
         self.signalReceivedTracker = {}
 
 
-    def reset(self):
+    def onReset(self):
         # gets the neruon ready to fire again
         self.weighedAverage = 0.0
         self.output = 0.0
@@ -120,7 +131,7 @@ class ReceiveAllNeuron(Neuron):
 
         if (not self.allSignalsReceived()): return
                
-        self.output = self.activationFn(self.bias + self.weighedAverage)
+        self.output = self.activation.fn(self.weighedAverage)
         self.fire()        
 
 
