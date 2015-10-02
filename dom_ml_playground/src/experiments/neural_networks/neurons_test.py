@@ -1,10 +1,10 @@
 ﻿import unittest
-from neurons import ReceiveAllNeuron
+from neurons import ReceiveAllNeuron, ActivationFunction
 
 class ReceiveAllNeuronTest(unittest.TestCase):
     def test_connectTo(self):
-        sender = ReceiveAllNeuron(lambda x: x)
-        receiver = ReceiveAllNeuron(lambda x: x)
+        sender = ReceiveAllNeuron(self.simple_activation())
+        receiver = ReceiveAllNeuron(self.simple_activation())
         sender.connectTo(receiver)
 
         self.assertEqual(len(sender.outConnections), 1)
@@ -14,8 +14,8 @@ class ReceiveAllNeuronTest(unittest.TestCase):
 
 
     def test_removeConnection(self):
-        sender = ReceiveAllNeuron(lambda x: x)
-        receiver = ReceiveAllNeuron(lambda x: x)
+        sender = ReceiveAllNeuron(self.simple_activation())
+        receiver = ReceiveAllNeuron(self.simple_activation())
         connection = sender.connectTo(receiver)
 
         connection.disconnect()
@@ -27,9 +27,9 @@ class ReceiveAllNeuronTest(unittest.TestCase):
 
 
     def test_wait_for_all_signals(self):
-        sender_1 = ReceiveAllNeuron(lambda x: x)
-        sender_2 = ReceiveAllNeuron(lambda x: x)
-        receiver = ReceiveAllNeuron(lambda x: x)
+        sender_1 = ReceiveAllNeuron(self.simple_activation())
+        sender_2 = ReceiveAllNeuron(self.simple_activation())
+        receiver = ReceiveAllNeuron(self.simple_activation())
 
         sender_1.connectTo(receiver)
         sender_2.connectTo(receiver)
@@ -53,8 +53,8 @@ class ReceiveAllNeuronTest(unittest.TestCase):
 
 
     def test_connection(self):
-        sender = ReceiveAllNeuron(lambda x: x)
-        receiver = ReceiveAllNeuron(lambda x: x)
+        sender = ReceiveAllNeuron(self.simple_activation())
+        receiver = ReceiveAllNeuron(self.simple_activation())
         connection = sender.connectTo(receiver)
 
         self.assertEqual(connection.sender, sender)
@@ -69,6 +69,10 @@ class ReceiveAllNeuronTest(unittest.TestCase):
         self.assertEqual(connection.weight, 0.5)
         self.assertEqual(connection.signalSent, 3.7)
         self.assertEqual(connection.signalReceived, 7.4)
+
+
+    def simple_activation(self):
+        return ActivationFunction(lambda x: x, lambda x: 1)
 
 
 if __name__ == '__main__':

@@ -1,9 +1,32 @@
-﻿import uuid
+﻿import math
+import uuid
 
-class NeuronActivation(object):
+class ActivationFunction(object):
     def __init__(self, fn, derivative):
         self.fn = fn
         self.derivative = derivative
+
+
+class SigmoidActivation(ActivationFunction):
+    def __init__(self):
+        ActivationFunction.__init__(
+            self,
+            lambda x: sigmoid(x),
+            lambda y: y * (1 - y))
+
+def sigmoid(x):
+    return 1.0 / (1.0 + math.exp(x))
+
+class Normalizer(object):
+    def __init__(self, range, offset):
+        self.input = ActivationFunction(
+            lambda x: (x + offset) / range,
+            lambda x: x)
+
+        self.output = ActivationFunction(
+            lambda x: (x * range) - offset,
+            lambda x: x)
+    
 
 
 class NeuronConnection(object):
@@ -35,7 +58,9 @@ class Neuron(object):
         self.activation = activation
         self.outConnections = set()
         self.inConnections = set()
-        self.reset()
+        self.accumulatedInputSignals = 0.0
+        self.output = 0.0
+        self.error = 0.0
 
 
     def fire(self):
@@ -105,7 +130,6 @@ class ReceiveAllNeuron(Neuron):
     def onReset(self):
         # gets the neruon ready to fire again
         self.weighedAverage = 0.0
-        self.output = 0.0
         for key in self.signalReceivedTracker:
             self.signalReceivedTracker[key] = False
 
