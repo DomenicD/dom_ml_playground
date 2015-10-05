@@ -30,6 +30,12 @@
     <Compile Include="src\experiments\neural_networks\feed_forward\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\experiments\neural_networks\neural_network.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\experiments\neural_networks\neural_network_utils.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="src\experiments\neural_networks\neurons.py">
       <SubType>Code</SubType>
     </Compile>

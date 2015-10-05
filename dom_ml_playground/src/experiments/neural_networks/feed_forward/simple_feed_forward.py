@@ -2,38 +2,8 @@
 import numpy
 from src.experiments.neural_networks.neurons import (
     ReceiveAllNeuron, SigmoidActivation)
-
-
-class NeuralNetwork(object):
-    def __init__(self):
-        self.layers = []
-    
-    @property
-    def nLayers(self):
-        return len(self.layers)
-
-
-    @property
-    def inputs(self):        
-        if self.nLayers > 0: return self.layers[0]
-        else: return []        
-
-
-    @property
-    def outputs(self):        
-        if self.nLayers > 0: return self.layers[self.nLayers - 1]
-        else: return []        
-
-
-    def addLayer(self, layer):
-        self.layers.append(layer)
-
-    def createLayer(self, count, neuronConstructor):
-        return [neuronConstructor() for n in range(count)]
-        
-    def prepairForInput(self): pass
-
-
+from src.experiments.neural_networks.neural_network import (
+    NeuralNetwork)
 
 class SimpleFeedForwardNN(NeuralNetwork):
     def __init__(self, normalizer, structure = [1, 5, 1]):

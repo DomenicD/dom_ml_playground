@@ -60,9 +60,10 @@ class Backpropagator(object):
         here is where we will perform one propagation iteration
         adjusting the networks's node weights
         """
-        # TODO: Still working on implementing the backpropagation
-        #       process. Need to have generic way of traversing
-        #       a NN to apply the changes.
+        # TODO: Use the NetworkUtils breadth traversal
+        # to perform backpropagation. Need to make an
+        # 'action' that checks the node type and adjusts
+        # the weights of its 'outbound' connections.        
         for i in range(len(neuralNetwork.outputLayer)):
             neuron = neuralNetwork.outputLayer[i]
             expectation = expectations[i]            
@@ -78,19 +79,19 @@ class Backpropagator(object):
                 connection.signalReceived)
         
 
-    def outputError(self, neuron, expectation):
-        actual = neuron.output
-        return ((expectation - actual) * 
-                neuron.activation.derivative(actual))
+    def outputError(self, neuron, expectation):        
+        return ((expectation - neuron.output) * 
+                neuron.activation.derivative(
+                    neuron.accumulatedInputSignals))
 
 
     def hiddenError(self, neuron, expectation):
-        actual = neuron.output
         weightedErrorSum = reduce(
             lambda sum, c: sum + c.weight * c.receiver.error, 
             neuron.outConnections)
 
         return (weightedErrorSum *
-                neuron.activation.derivative(actual))
+                neuron.activation.derivative(
+                    neuron.accumulatedInputSignals))
 
     

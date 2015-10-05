@@ -1,5 +1,6 @@
 ﻿import math
 import uuid
+from enum import Enum
 
 class ActivationFunction(object):
     def __init__(self, fn, derivative):
@@ -12,7 +13,10 @@ class SigmoidActivation(ActivationFunction):
         ActivationFunction.__init__(
             self,
             lambda x: sigmoid(x),
-            lambda y: y * (1 - y))
+            # This could be optimized as the derivative
+            # will always be called after the fn.
+            # And will be called with the same x value.
+            lambda x: sigmoid(x) * (1 - sigmoid(x)))
 
 def sigmoid(x):
     return 1.0 / (1.0 + math.exp(x))
@@ -49,6 +53,12 @@ class NeuronConnection(object):
         self.receiver.removeInbound(self)
 
 
+class NeuronType(Enum):
+    UNKNOWN = 0,
+    INPUT = 1,
+    OUTPUT = 2,
+    HIDDEN = 3
+
 
 class Neuron(object):
     # __metaclass__ = ABCMeta
@@ -61,6 +71,21 @@ class Neuron(object):
         self.accumulatedInputSignals = 0.0
         self.output = 0.0
         self.error = 0.0
+
+
+    @property
+    def type(self):
+        if (len(self.outConnections) == 0 and
+            len(self.inConnections) == 0):
+            return NeuronType.UNKNOWN
+
+        if len(self.outConnections) == 0:
+            return NeuronType.OUTPUT
+
+        if len(self.inConnections) == 0:
+            return NeuronType.INPUT
+
+        return NeuronType.HIDDEN
 
 
     def fire(self):
@@ -117,19 +142,18 @@ class Neuron(object):
 
             
     
-# This type is like most models. It requires all of the signals to have been received
-# before sending any of its connections.
+# This type is like most models. It requires all of the
+# signals to have been received before sending any of
+# its connections.
 class ReceiveAllNeuron(Neuron):
     def __init__(self, activation):
         # Call inherited class.
         Neuron.__init__(self, activation)
-        self.weighedAverage = 0.0
         self.signalReceivedTracker = {}
 
 
     def onReset(self):
         # gets the neruon ready to fire again
-        self.weighedAverage = 0.0
         for key in self.signalReceivedTracker:
             self.signalReceivedTracker[key] = False
 
@@ -151,11 +175,9 @@ class ReceiveAllNeuron(Neuron):
         if (connectionId):
             self.signalReceivedTracker[connectionId] = True
 
-        self.weighedAverage += value
-
         if (not self.allSignalsReceived()): return
                
-        self.output = self.activation.fn(self.weighedAverage)
+        self.output = self.activation.fn(self.accumulatedInputSignals)
         self.fire()        
 
 
