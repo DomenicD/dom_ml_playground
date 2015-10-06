@@ -39,6 +39,11 @@ class SimpleFeedForwardNN(NeuralNetwork):
                     sender.connectTo(reciever)
 
 
+    def prepairForInput(self):
+        for neuron in self.neurons:
+            neuron.reset()
+
+
 # TASK
 # 1) [Done] Implement a simple feed forward neural network
 # 2) Implement a backpropagation training algorithm for the simple network

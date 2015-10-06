@@ -41,6 +41,32 @@ class NeuronConnection(object):
         self.weight = 1.0
         self.signalSent = 0.0
         self.signalReceived = 0.0
+        
+
+    @property
+    def weight(self):
+        return self._weight
+
+
+    @weight.setter
+    def weight(self, value):
+        self._prior_weight = self.weight
+        self._weight = value
+
+
+    @property
+    def prior_weight(self):
+        return self._prior_weight
+
+
+    @property
+    def weight_difference(self):
+        return self.weight - self.prior_weight
+
+
+    @property
+    def weight_change(self):
+        return weight_difference / self.prior_weight
 
 
     def sendSignal(self, value):
