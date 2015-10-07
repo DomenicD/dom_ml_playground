@@ -71,6 +71,12 @@ class ReceiveAllNeuronTest(unittest.TestCase):
         self.assertEqual(connection.signalReceived, 7.4)
 
 
+    def test_sigmoid_activation(self):
+        neuron = ReceiveAllNeuron()        
+        neuron.receiveSignal(-0.607)
+        self.assertAlmostEqual(neuron.output, 0.3527438)
+
+
     def simple_activation(self):
         return ActivationFunction(lambda x: x, lambda x: 1)
 

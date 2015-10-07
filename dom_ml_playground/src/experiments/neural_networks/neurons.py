@@ -19,7 +19,7 @@ class SigmoidActivation(ActivationFunction):
             lambda x: sigmoid(x) * (1 - sigmoid(x)))
 
 def sigmoid(x):
-    return 1.0 / (1.0 + math.exp(x))
+    return 1.0 / (1.0 + math.exp(-x))
 
 class Normalizer(object):
     def __init__(self, range, offset):
@@ -38,7 +38,8 @@ class NeuronConnection(object):
         self.id = uuid.uuid4().hex
         self.sender = sender
         self.receiver = receiver
-        self.weight = 1.0
+        self._weight = 1.0
+        self.weight = self._weight
         self.signalSent = 0.0
         self.signalReceived = 0.0
         
@@ -97,6 +98,16 @@ class Neuron(object):
         self.accumulatedInputSignals = 0.0
         self.output = 0.0
         self.error = 0.0
+
+
+    @property
+    def out_connections_list(self):
+        return list(self.outConnections)
+
+
+    @property
+    def in_connections_list(self):
+        return list(self.inConnections)
 
 
     @property
@@ -172,7 +183,7 @@ class Neuron(object):
 # signals to have been received before sending any of
 # its connections.
 class ReceiveAllNeuron(Neuron):
-    def __init__(self, activation):
+    def __init__(self, activation = SigmoidActivation()):
         # Call inherited class.
         Neuron.__init__(self, activation)
         self.signalReceivedTracker = {}

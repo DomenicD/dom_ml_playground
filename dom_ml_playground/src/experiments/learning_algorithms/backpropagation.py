@@ -71,7 +71,7 @@ class Backpropagator(object):
     def adjust_weight(self, connection, learning_rate):        
         connection.weight += (learning_rate * 
                               connection.receiver.error * 
-                              connection.signalReceived)
+                              connection.signalSent)
         
 
     def outputError(self, neuron, expectation):        
@@ -83,7 +83,7 @@ class Backpropagator(object):
     def hiddenError(self, neuron):
         weightedErrorSum = reduce(
             lambda sum, c: sum + c.weight * c.receiver.error, 
-            neuron.outConnections)
+            neuron.outConnections, 0.0)
 
         return (weightedErrorSum *
                 neuron.activation.derivative(
