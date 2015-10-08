@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>9d7ea3e6-d46f-4fd2-b022-c548a7ac450f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>src\experiments\neural_networks\feed_forward\feed_forward_test.py</StartupFile>
+    <StartupFile>code\test\neural_networks\feed_forward_test.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,51 +22,107 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="src\experiments\learning_algorithms\backpropagation_test.py" />
-    <Compile Include="src\experiments\learning_algorithms\backpropagation.py">
+    <Compile Include="code\src\data_processing\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\experiments\neural_networks\feed_forward\feed_forward_test.py" />
-    <Compile Include="src\experiments\neural_networks\feed_forward\feed_forward.py" />
-    <Compile Include="src\experiments\neural_networks\feed_forward\__init__.py">
+    <Compile Include="code\src\experiments\feed_forward\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\experiments\neural_networks\neural_network.py">
+    <Compile Include="code\src\neurons\activation_functions\sigmoid_activation.py" />
+    <Compile Include="code\src\neurons\activation_functions\activation_function.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\experiments\neural_networks\neural_network_utils.py">
+    <Compile Include="code\src\neurons\activation_functions\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\experiments\neural_networks\neurons.py">
+    <Compile Include="code\src\neurons\neuron_connection.py" />
+    <Compile Include="code\src\neurons\receive_all_neuron.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\experiments\neural_networks\neurons_test.py" />
-    <Compile Include="src\experiments\learning_algorithms\__init__.py">
+    <Compile Include="code\src\neurons\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\experiments\neural_networks\__init__.py">
+    <Compile Include="code\test\data_processing\normalizer_test.py" />
+    <Compile Include="code\test\data_processing\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\experiments\__init__.py">
+    <Compile Include="code\test\experiments\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\tutorials\theano\logistic_regression\theano_logistic_regression.py">
+    <Compile Include="code\test\learning_algorithms\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\__init__.py">
+    <Compile Include="code\test\neural_networks\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\test\neurons\activation_functions\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\test\neurons\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\test\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\test\learning_algorithms\backpropagation_test.py" />
+    <Compile Include="code\src\learning_algorithms\backpropagation.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\test\neural_networks\feed_forward_test.py" />
+    <Compile Include="code\src\neural_networks\feed_forward.py" />
+    <Compile Include="code\src\neural_networks\neural_network.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\src\neural_networks\neural_network_utils.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\src\neurons\neurons.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\test\neurons\receive_all_neuron_test.py" />
+    <Compile Include="code\src\learning_algorithms\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\src\data_processing\normalizer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\src\neural_networks\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\src\experiments\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="tutorials\theano\logistic_regression\theano_logistic_regression.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\src\__init__.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="data\" />
-    <Folder Include="src\" />
-    <Folder Include="src\experiments\" />
-    <Folder Include="src\experiments\learning_algorithms\" />
-    <Folder Include="src\experiments\neural_networks\" />
-    <Folder Include="src\experiments\neural_networks\feed_forward\" />
-    <Folder Include="src\tutorials\" />
-    <Folder Include="src\tutorials\theano\" />
-    <Folder Include="src\tutorials\theano\logistic_regression\" />
+    <Folder Include="code\" />
+    <Folder Include="code\src\" />
+    <Folder Include="code\src\data_processing\" />
+    <Folder Include="code\src\experiments\" />
+    <Folder Include="code\src\experiments\feed_forward\" />
+    <Folder Include="code\src\learning_algorithms\" />
+    <Folder Include="code\src\neurons\" />
+    <Folder Include="code\src\neurons\activation_functions\" />
+    <Folder Include="code\test\" />
+    <Folder Include="code\src\neural_networks\" />
+    <Folder Include="code\test\data_processing\" />
+    <Folder Include="code\test\experiments\" />
+    <Folder Include="code\test\learning_algorithms\" />
+    <Folder Include="code\test\neural_networks\" />
+    <Folder Include="code\test\neurons\" />
+    <Folder Include="code\test\neurons\activation_functions\" />
+    <Folder Include="tutorials\" />
+    <Folder Include="tutorials\theano\" />
+    <Folder Include="tutorials\theano\logistic_regression\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

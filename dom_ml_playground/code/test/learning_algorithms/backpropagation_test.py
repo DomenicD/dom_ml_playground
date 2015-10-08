@@ -1,8 +1,10 @@
 ﻿import unittest
-from src.experiments.learning_algorithms.backpropagation import Backpropagator
-from src.experiments.neural_networks.neurons import ReceiveAllNeuron
-from src.experiments.neural_networks.neural_network import Normalizer
-from src.experiments.neural_networks.feed_forward.feed_forward import FeedForwardNN
+from code.src.learning_algorithms.backpropagation import Backpropagator
+from code.src.neurons.receive_all_neuron import ReceiveAllNeuron
+from code.src.data_processing.normalizer import Normalizer
+from code.src.neural_networks.feed_forward import FeedForwardNN
+
+
 
 class BackpropagatorTest(unittest.TestCase):
     def test_outputError(self):

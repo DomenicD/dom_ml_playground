@@ -1,5 +1,6 @@
-﻿from src.experiments.neural_networks.neural_network_utils import NetworkUtils
-from src.experiments.neural_networks.neurons import NeuronType
+﻿from code.src.neural_networks.neural_network_utils import NetworkUtils
+from code.src.neurons.neurons import NeuronType
+
 
 # http://home.agh.edu.pl/~vlsi/AI/backp_t_en/backprop.html
 # http://www.cse.unsw.edu.au/~cs9417ml/MLP2/

@@ -1,5 +1,7 @@
 ﻿import unittest
-from neurons import ReceiveAllNeuron, ActivationFunction
+from code.src.neurons.receive_all_neuron import ReceiveAllNeuron
+from code.src.neurons.activation_functions.activation_function import (
+    ActivationFunction)
 
 class ReceiveAllNeuronTest(unittest.TestCase):
     def test_connectTo(self):

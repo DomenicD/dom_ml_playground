@@ -1,7 +1,6 @@
 ﻿import unittest
-from src.experiments.neural_networks.neural_network import Normalizer
-from src.experiments.neural_networks.feed_forward.feed_forward import (
-    FeedForwardNN)
+from code.src.data_processing.normalizer import Normalizer
+from code.src.neural_networks.feed_forward import FeedForwardNN
 
 class SimpleFeedForwardNNTest(unittest.TestCase):
     def test_input_passes_through_network(self):
