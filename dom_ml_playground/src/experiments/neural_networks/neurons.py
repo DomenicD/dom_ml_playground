@@ -18,18 +18,10 @@ class SigmoidActivation(ActivationFunction):
             # And will be called with the same x value.
             lambda x: sigmoid(x) * (1 - sigmoid(x)))
 
+
 def sigmoid(x):
     return 1.0 / (1.0 + math.exp(-x))
 
-class Normalizer(object):
-    def __init__(self, range, offset):
-        self.input = ActivationFunction(
-            lambda x: (x + offset) / range,
-            lambda x: x)
-
-        self.output = ActivationFunction(
-            lambda x: (x * range) - offset,
-            lambda x: x)
     
 
 

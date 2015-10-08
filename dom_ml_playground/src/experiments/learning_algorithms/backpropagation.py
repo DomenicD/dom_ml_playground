@@ -23,7 +23,7 @@ class Backpropagator(object):
             self.lesson(neuralNetwork, trainingData, .5)
 
     
-    def lesson(self, neuralNetwork, trainingData, learning_rate):
+    def lesson(self, neuralNetwork, trainingData, learning_rate = 1):
         for expectation in trainingData:
             neuralNetwork.prepairForInput()
             for i in range(len(neuralNetwork.inputLayer)):
@@ -34,7 +34,7 @@ class Backpropagator(object):
 
     
 
-    def learn(self, neuralNetwork, expectations, learning_rate):
+    def learn(self, neuralNetwork, expectation, learning_rate = 1):
         """This is the actual backpropagation part of the code
         here is where we will perform one propagation iteration
         adjusting the networks's node weights
@@ -44,7 +44,7 @@ class Backpropagator(object):
         # 'action' that checks the node type and adjusts
         # the weights of its 'outbound' connections.        
         action = lambda neuron: self.propagate_errors(
-            neuralNetwork, neuron, expectations, learning_rate)
+            neuralNetwork, neuron, expectation, learning_rate)
 
         NetworkUtils.OutputBreadthTraversal(neuralNetwork,
                                             action)
@@ -54,8 +54,8 @@ class Backpropagator(object):
                          learning_rate):     
            
         if neuron.type == NeuronType.OUTPUT:
-            neuron_index = network.neuron_index(neuron)
-            expectation = expectations[neuron_index]
+            index = network.neuron_index(neuron).index
+            expectation = expectations[index]
             neuron.error = self.outputError(
                 neuron, expectation)
         else:

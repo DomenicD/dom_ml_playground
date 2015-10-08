@@ -1,16 +1,17 @@
 ﻿import unittest
-from simple_feed_forward import SimpleFeedForwardNN
-from src.experiments.neural_networks.neurons import Normalizer
+from src.experiments.neural_networks.neural_network import Normalizer
+from src.experiments.neural_networks.feed_forward.feed_forward import (
+    FeedForwardNN)
 
 class SimpleFeedForwardNNTest(unittest.TestCase):
     def test_input_passes_through_network(self):
         normalizer = Normalizer(2, 1)
-        network = SimpleFeedForwardNN(normalizer, [2, 4, 5, 3])
+        network = FeedForwardNN(normalizer, [2, 4, 5, 3])
 
-        for input in network.inputs:
+        for input in network.input_layer:
             input.receiveSignal(5.0)
 
-        for output in network.outputs:
+        for output in network.output_layer:
             self.assertNotAlmostEqual(output.output, 0.0)
 
 

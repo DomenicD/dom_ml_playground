@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>9d7ea3e6-d46f-4fd2-b022-c548a7ac450f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>src\experiments\neural_networks\feed_forward\simple_feed_forward_test.py</StartupFile>
+    <StartupFile>src\experiments\neural_networks\feed_forward\feed_forward_test.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -26,8 +26,8 @@
     <Compile Include="src\experiments\learning_algorithms\backpropagation.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\experiments\neural_networks\feed_forward\simple_feed_forward_test.py" />
-    <Compile Include="src\experiments\neural_networks\feed_forward\simple_feed_forward.py" />
+    <Compile Include="src\experiments\neural_networks\feed_forward\feed_forward_test.py" />
+    <Compile Include="src\experiments\neural_networks\feed_forward\feed_forward.py" />
     <Compile Include="src\experiments\neural_networks\feed_forward\__init__.py">
       <SubType>Code</SubType>
     </Compile>

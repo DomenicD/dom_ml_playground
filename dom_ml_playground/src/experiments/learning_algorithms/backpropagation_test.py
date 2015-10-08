@@ -1,6 +1,8 @@
 ﻿import unittest
 from src.experiments.learning_algorithms.backpropagation import Backpropagator
 from src.experiments.neural_networks.neurons import ReceiveAllNeuron
+from src.experiments.neural_networks.neural_network import Normalizer
+from src.experiments.neural_networks.feed_forward.feed_forward import FeedForwardNN
 
 class BackpropagatorTest(unittest.TestCase):
     def test_outputError(self):
@@ -9,8 +11,6 @@ class BackpropagatorTest(unittest.TestCase):
         neuron.receiveSignal(-0.607)        
         error = backpropagator.outputError(neuron, 0.78)
         self.assertAlmostEqual(error, 0.09754925)
-
-
 
 
     def test_hiddenError(self):
@@ -45,8 +45,6 @@ class BackpropagatorTest(unittest.TestCase):
         self.assertAlmostEqual(hidden_2.error, -0.00581762)
 
         
-
-
     def test_adjust_weight(self):
         backpropagator = Backpropagator()
         output = ReceiveAllNeuron()
@@ -75,5 +73,19 @@ class BackpropagatorTest(unittest.TestCase):
         backpropagator.adjust_weight(connection_2, 1.1)
         # -0.25 + (1.1 * 0.09754925 * -0.15175)
         self.assertAlmostEqual(connection_2.weight, -0.26628341)
+
+
+    def test_propagate_errors(self):
+        backpropagator = Backpropagator()
+        normalizer = Normalizer(in_range = 100, out_range = 200)
+        network = FeedForwardNN(normalizer, [1, 2, 1])
+        expectation = [148]
+        result = network.execute([74])
+
+        backpropagator.learn(network, expectation)
+
+
+
+
 
 
