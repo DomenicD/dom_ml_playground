@@ -7,25 +7,25 @@ class ReceiveAllNeuronTest(unittest.TestCase):
     def test_connectTo(self):
         sender = ReceiveAllNeuron(self.simple_activation())
         receiver = ReceiveAllNeuron(self.simple_activation())
-        sender.connectTo(receiver)
+        sender.connect_to(receiver)
 
-        self.assertEqual(len(sender.outConnections), 1)
-        self.assertEqual(len(receiver.inConnections), 1)
-        self.assertSetEqual(sender.outConnections,
-                         receiver.inConnections)
+        self.assertEqual(len(sender.out_connections), 1)
+        self.assertEqual(len(receiver.in_connections), 1)
+        self.assertSetEqual(sender.out_connections,
+                         receiver.in_connections)
 
 
     def test_removeConnection(self):
         sender = ReceiveAllNeuron(self.simple_activation())
         receiver = ReceiveAllNeuron(self.simple_activation())
-        connection = sender.connectTo(receiver)
+        connection = sender.connect_to(receiver)
 
         connection.disconnect()
 
-        self.assertEqual(len(sender.outConnections), 0)
-        self.assertEqual(len(receiver.inConnections), 0)
-        self.assertSetEqual(sender.outConnections,
-                         receiver.inConnections)
+        self.assertEqual(len(sender.out_connections), 0)
+        self.assertEqual(len(receiver.in_connections), 0)
+        self.assertSetEqual(sender.out_connections,
+                         receiver.in_connections)
 
 
     def test_wait_for_all_signals(self):
@@ -33,14 +33,14 @@ class ReceiveAllNeuronTest(unittest.TestCase):
         sender_2 = ReceiveAllNeuron(self.simple_activation())
         receiver = ReceiveAllNeuron(self.simple_activation())
 
-        sender_1.connectTo(receiver)
-        sender_2.connectTo(receiver)
+        sender_1.connect_to(receiver)
+        sender_2.connect_to(receiver)
 
-        sender_1.receiveSignal(2.0)
+        sender_1.receive_signal(2.0)
         self.assertEqual(receiver.output, 0.0)
         self.assertFalse(receiver.allSignalsReceived())
         
-        sender_2.receiveSignal(3.0)
+        sender_2.receive_signal(3.0)
         self.assertEqual(receiver.output, 5.0)
         self.assertTrue(receiver.allSignalsReceived())
 
@@ -57,7 +57,7 @@ class ReceiveAllNeuronTest(unittest.TestCase):
     def test_connection(self):
         sender = ReceiveAllNeuron(self.simple_activation())
         receiver = ReceiveAllNeuron(self.simple_activation())
-        connection = sender.connectTo(receiver)
+        connection = sender.connect_to(receiver)
 
         self.assertEqual(connection.sender, sender)
         self.assertEqual(connection.receiver, receiver)
@@ -66,7 +66,7 @@ class ReceiveAllNeuronTest(unittest.TestCase):
         self.assertEqual(connection.signalReceived, 0.0)
 
         connection.weight = 0.5
-        sender.receiveSignal(7.4)
+        sender.receive_signal(7.4)
 
         self.assertEqual(connection.weight, 0.5)
         self.assertEqual(connection.signalSent, 3.7)
@@ -75,7 +75,7 @@ class ReceiveAllNeuronTest(unittest.TestCase):
 
     def test_sigmoid_activation(self):
         neuron = ReceiveAllNeuron()        
-        neuron.receiveSignal(-0.607)
+        neuron.receive_signal(-0.607)
         self.assertAlmostEqual(neuron.output, 0.3527438)
 
 

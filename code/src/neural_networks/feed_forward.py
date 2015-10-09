@@ -39,7 +39,7 @@ class FeedForwardNN(NeuralNetwork):
         for iLayer in range(self.num_layers - 1):
             for sender in self.layers[iLayer]:
                 for reciever in self.layers[iLayer + 1]:
-                    sender.connectTo(reciever)
+                    sender.connect_to(reciever)
 
 
     def prepair_for_input(self):
@@ -52,7 +52,7 @@ class FeedForwardNN(NeuralNetwork):
         for i in range(len(inputs)):
             input = inputs[i]
             neuron = self.input_layer[i]
-            neuron.receiveSignal(self.normalizer.norm_input(input))
+            neuron.receive_signal(self.normalizer.norm_input(input))
 
         return [self.normalizer.norm_output(output.output)
                 for output in self.output_layer]

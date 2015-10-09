@@ -8,7 +8,7 @@ class SimpleFeedForwardNNTest(unittest.TestCase):
         network = FeedForwardNN(normalizer, [2, 4, 5, 3])
 
         for input in network.input_layer:
-            input.receiveSignal(5.0)
+            input.receive_signal(5.0)
 
         for output in network.output_layer:
             self.assertNotAlmostEqual(output.output, 0.0)
@@ -18,7 +18,7 @@ class SimpleFeedForwardNNTest(unittest.TestCase):
         sentSignals = [connection.signalSent 
                        for layer in network.layers 
                        for node in layer 
-                       for connection in node.outConnections]
+                       for connection in node.out_connections]
         
         self.assertTrue(s != 0.0 for s in sentSignals)
 

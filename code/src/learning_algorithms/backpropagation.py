@@ -17,37 +17,33 @@ class Expectation(object):
 
 
 class Backpropagator(object):
-    def teach(self, neuralNetwork, trainingData,
-              acceptableError = .001, maxIterations = 100,
-              timeLimit = None):
-        for i in range(maxIterations):
-            self.lesson(neuralNetwork, trainingData, .5)
+    def teach(self, neural_network, expectations,
+              acceptable_error = .001, max_iterations = 100,
+              time_limit = None):
+        for i in range(max_iterations):
+            self.lesson(neural_network, expectations, .5)
 
     
-    def lesson(self, neuralNetwork, trainingData, learning_rate = 1):
-        for expectation in trainingData:
-            neuralNetwork.prepairForInput()
-            for i in range(len(neuralNetwork.inputLayer)):
-                neuron = neuralNetwork.inputLayer[i]
+    def lesson(self, neural_network, expectations, learning_rate = 1):
+        for expectation in expectations:
+            neural_network.prepair_for_input()
+            for i in range(len(neural_network.input_layer)):
+                neuron = neural_network.input_layer[i]
                 input = expectation.inputs[i]
-                neuron.receiveSignal(input)
-            learn(neuralNetwork, expectation.outputs, learning_rate)
+                neuron.receive_signal(input)
+            learn(neural_network, expectation.outputs, learning_rate)
 
     
 
-    def learn(self, neuralNetwork, expectation, learning_rate = 1):
+    def learn(self, neural_network, expectation, learning_rate = 1):
         """This is the actual backpropagation part of the code
         here is where we will perform one propagation iteration
         adjusting the networks's node weights
-        """
-        # TODO: Use the NetworkUtils breadth traversal
-        # to perform backpropagation. Need to make an
-        # 'action' that checks the node type and adjusts
-        # the weights of its 'outbound' connections.        
+        """        
         action = lambda neuron: self.propagate_errors(
-            neuralNetwork, neuron, expectation, learning_rate)
+            neural_network, neuron, expectation, learning_rate)
 
-        NetworkUtils.OutputBreadthTraversal(neuralNetwork,
+        NetworkUtils.OutputBreadthTraversal(neural_network,
                                             action)
 
 
@@ -57,14 +53,14 @@ class Backpropagator(object):
         if neuron.type == NeuronType.OUTPUT:
             index = network.neuron_index(neuron).index
             expectation = expectations[index]
-            neuron.error = self.outputError(
+            neuron.error = self.output_error(
                 neuron, expectation)
         else:
             # Calculate the error for the current layer
-            neuron.error = self.hiddenError(neuron)
+            neuron.error = self.hidden_error(neuron)
 
             # Adjust the weights of the prior layer
-            for outbound in neuron.outConnections:
+            for outbound in neuron.out_connections:
                 self.adjust_weight(outbound, learning_rate)
     
 
@@ -75,19 +71,19 @@ class Backpropagator(object):
                               connection.signalSent)
         
 
-    def outputError(self, neuron, expectation):        
+    def output_error(self, neuron, expectation):        
         return ((expectation - neuron.output) * 
                 neuron.activation.derivative(
-                    neuron.accumulatedInputSignals))
+                    neuron.accumulated_input_signals))
 
 
-    def hiddenError(self, neuron):
+    def hidden_error(self, neuron):
         weightedErrorSum = reduce(
             lambda sum, c: sum + c.weight * c.receiver.error, 
-            neuron.outConnections, 0.0)
+            neuron.out_connections, 0.0)
 
         return (weightedErrorSum *
                 neuron.activation.derivative(
-                    neuron.accumulatedInputSignals))
+                    neuron.accumulated_input_signals))
 
     

@@ -19,87 +19,87 @@ class Neuron(object):
     def __init__(self, activation):
         self.id = uuid.uuid4().hex        
         self.activation = activation
-        self.outConnections = set()
-        self.inConnections = set()
-        self.accumulatedInputSignals = 0.0
+        self.out_connections = set()
+        self.in_connections = set()
+        self.accumulated_input_signals = 0.0
         self.output = 0.0
         self.error = 0.0
 
 
     @property
     def out_connections_list(self):
-        return list(self.outConnections)
+        return list(self.out_connections)
 
 
     @property
     def in_connections_list(self):
-        return list(self.inConnections)
+        return list(self.in_connections)
 
 
     @property
     def type(self):
-        if (len(self.outConnections) == 0 and
-            len(self.inConnections) == 0):
+        if (len(self.out_connections) == 0 and
+            len(self.in_connections) == 0):
             return NeuronType.UNKNOWN
 
-        if len(self.outConnections) == 0:
+        if len(self.out_connections) == 0:
             return NeuronType.OUTPUT
 
-        if len(self.inConnections) == 0:
+        if len(self.in_connections) == 0:
             return NeuronType.INPUT
 
         return NeuronType.HIDDEN
 
 
     def fire(self):
-        for c in self.outConnections:
+        for c in self.out_connections:
             c.sendSignal(self.output)
 
 
     # This creates a one way connection from this neuron to the passed in one.
-    def connectTo(self, node):
+    def connect_to(self, node):
         connection = NeuronConnection(self, node)
-        self.addOutbound(connection)
-        node.addInbound(connection)        
+        self.add_outbound(connection)
+        node.add_inbound(connection)        
         return connection    
 
 
-    def addOutbound(self, connection):
-        self.outConnections.add(connection)
-        self.onOutboundAdded(connection)
+    def add_outbound(self, connection):
+        self.out_connections.add(connection)
+        self.on_outbound_added(connection)
 
 
-    def addInbound(self, connection):
-        self.inConnections.add(connection)
-        self.onInboundAdded(connection)    
+    def add_inbound(self, connection):
+        self.in_connections.add(connection)
+        self.on_inbound_added(connection)    
 
 
-    def removeOutbound(self, connection):
-        self.outConnections.remove(connection)
-        self.onOutboundRemoved(connection)
+    def remove_outbound(self, connection):
+        self.out_connections.remove(connection)
+        self.on_outbound_removed(connection)
 
 
-    def removeInbound(self, connection):
-        self.inConnections.remove(connection)
-        self.onInboundRemoved(connection)
+    def remove_inbound(self, connection):
+        self.in_connections.remove(connection)
+        self.on_inbound_removed(connection)
 
 
-    def receiveSignal(self, value, connectionId = None):
-        self.accumulatedInputSignals += value
-        self.onSignalReceived(value, connectionId)
+    def receive_signal(self, value, connection_id = None):
+        self.accumulated_input_signals += value
+        self.on_signal_received(value, connection_id)
 
 
     def reset(self):
-        self.accumulatedInputSignals = 0.0
+        self.accumulated_input_signals = 0.0
         self.output = 0.0
         self.error = 0.0
-        self.onReset()
+        self.on_reset()
 
 
     # Overridable event methods
-    def onInboundAdded(self, connection): pass
-    def onInboundRemoved(self, connection): pass
-    def onOutboundAdded(self, connection): pass
-    def onOutboundRemoved(self, connection): pass
-    def onSignalReceived(self, value, connectionId): pass
-    def onReset(self): pass
+    def on_inbound_added(self, connection): pass
+    def on_inbound_removed(self, connection): pass
+    def on_outbound_added(self, connection): pass
+    def on_outbound_removed(self, connection): pass
+    def on_signal_received(self, value, connection_id): pass
+    def on_reset(self): pass

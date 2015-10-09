@@ -15,7 +15,7 @@ class NetworkUtils(object):
             if not visited.get(node.id, False):
                 action(node)
                 visited[node.id] = True
-                for inbound in node.inConnections:
+                for inbound in node.in_connections:
                     receiver = inbound.receiver
                     if not receiver in processed:
                         queue.put(receiver)

@@ -13,32 +13,32 @@ class ReceiveAllNeuron(Neuron):
         self.signalReceivedTracker = {}
 
 
-    def onReset(self):
+    def on_reset(self):
         # gets the neruon ready to fire again
         for key in self.signalReceivedTracker:
             self.signalReceivedTracker[key] = False
 
 
-    def onInboundAdded(self, connection):
+    def on_inbound_added(self, connection):
         self.signalReceivedTracker[connection.id] = False
 
 
-    def onInboundRemoved(self, connection):
+    def on_inbound_removed(self, connection):
         self.signalReceivedTracker.pop(connection.id, None)
 
 
-    def onSignalReceived(self, value, connectionId):
+    def on_signal_received(self, value, connection_id):
         # If all signals have been received, the output is set
         # and the node fires.         
         if (len(self.signalReceivedTracker) and 
-            self.signalReceivedTracker[connectionId]): return
+            self.signalReceivedTracker[connection_id]): return
 
-        if (connectionId):
-            self.signalReceivedTracker[connectionId] = True
+        if (connection_id):
+            self.signalReceivedTracker[connection_id] = True
 
         if (not self.allSignalsReceived()): return
                
-        self.output = self.activation.fn(self.accumulatedInputSignals)
+        self.output = self.activation.fn(self.accumulated_input_signals)
         self.fire()        
 
 
