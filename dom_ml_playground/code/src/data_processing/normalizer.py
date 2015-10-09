@@ -1,4 +1,4 @@
-class Normalizer(object):
+﻿class Normalizer(object):
     """Used to normailze the data going into and coming out of a neural
     network.
 
@@ -6,33 +6,40 @@ class Normalizer(object):
     If out_offset is not specified, it will use the in_offset.
 
     """
-    def __init__(self, in_range = 1, in_offset = 0,
-                 out_range = None, out_offset = None):
-        self.in_range = in_range
-        self.in_offset = in_offset
+    def __init__(self, in_lower = 0, in_upper = 1,
+                 out_lower = 0, out_upper = 1,
+                 norm_lower = -3, norm_upper = 3):
         
-        if out_range == None:
-            self.out_range = in_range
-        else:
-            self.out_range = out_range
-        
-        if out_offset == None:
-            self.out_offset = in_offset
-        else:
-            self.out_offset = out_offset
+        self.in_offset = in_lower
+        self.in_range = in_upper - in_lower
 
+        self.out_offset = out_lower
+        self.out_range = out_upper - out_lower
+
+        self.norm_offset = norm_lower
+        self.norm_range = norm_upper - norm_lower
         
+    
     def norm_input(self, x):
-       return (x + self.in_offset) / self.in_range
+        return self._normalize((x - self.in_offset) / float(self.in_range))
    
 
     def norm_output(self, x):
-       return (x * self.out_range) - self.out_offset
+        return (x * self.out_range) + self.out_offset
 
 
     def denorm_input(self, x):
-       return (x * self.in_range) - self.in_offset
+        x = self._denormalize(x)
+        return (x * self.in_range) + self.in_offset
    
 
     def denorm_output(self, x):
-       return (x + self.out_offset) / self.out_range
+        return (x - self.out_offset) / float(self.out_range)
+
+
+    def _normalize(self, x):
+        return (x * self.norm_range) + self.norm_offset
+
+
+    def _denormalize(self, x):
+        return (x - self.norm_offset) / float(self.norm_range)
