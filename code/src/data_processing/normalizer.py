@@ -6,18 +6,18 @@
     If out_offset is not specified, it will use the in_offset.
 
     """
-    def __init__(self, in_lower = 0, in_upper = 1,
-                 out_lower = 0, out_upper = 1,
-                 norm_lower = -3, norm_upper = 3):
+    def __init__(self, in_min = 0, in_max = 1,
+                 out_min = 0, out_max = 1,
+                 norm_min = -3, norm_max = 3):
         
-        self.in_offset = in_lower
-        self.in_range = in_upper - in_lower
+        self.in_offset = in_min
+        self.in_range = in_max - in_min
 
-        self.out_offset = out_lower
-        self.out_range = out_upper - out_lower
+        self.out_offset = out_min
+        self.out_range = out_max - out_min
 
-        self.norm_offset = norm_lower
-        self.norm_range = norm_upper - norm_lower
+        self.norm_offset = norm_min
+        self.norm_range = norm_max - norm_min
         
     
     def norm_input(self, x):

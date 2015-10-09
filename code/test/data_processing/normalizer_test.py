@@ -14,7 +14,7 @@ class NormalizerTest(unittest.TestCase):
 
 
     def test_norm_input(self):
-        normalizer = Normalizer(in_lower = -50, in_upper = 50)
+        normalizer = Normalizer(in_min = -50, in_max = 50)
         
         self.assertAlmostEqual(-2.94, normalizer.norm_input(-49))
         self.assertAlmostEqual(0, normalizer.norm_input(0))
@@ -22,7 +22,7 @@ class NormalizerTest(unittest.TestCase):
 
 
     def test_denorm_input(self):
-        normalizer = Normalizer(in_lower = -50, in_upper = 50)
+        normalizer = Normalizer(in_min = -50, in_max = 50)
         
         self.assertAlmostEqual(-49, normalizer.denorm_input(-2.94))
         self.assertAlmostEqual(0, normalizer.denorm_input(0))
@@ -30,7 +30,7 @@ class NormalizerTest(unittest.TestCase):
 
 
     def test_norm_output(self):
-        normalizer = Normalizer(out_lower = -20, out_upper = 70)
+        normalizer = Normalizer(out_min = -20, out_max = 70)
         
         self.assertAlmostEqual(-20, normalizer.norm_output(0))
         self.assertAlmostEqual(25, normalizer.norm_output(.5))
@@ -39,7 +39,7 @@ class NormalizerTest(unittest.TestCase):
 
 
     def test_denorm_output(self):
-        normalizer = Normalizer(out_lower = -20, out_upper = 70)
+        normalizer = Normalizer(out_min = -20, out_max = 70)
         
         self.assertAlmostEqual(0, normalizer.denorm_output(-20))
         self.assertAlmostEqual(.5, normalizer.denorm_output(25))

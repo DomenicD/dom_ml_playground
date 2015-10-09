@@ -79,15 +79,9 @@ class BackpropagatorTest(unittest.TestCase):
 
     def test_propagate_errors(self):
         backpropagator = Backpropagator()
-        normalizer = Normalizer(in_upper = 100, out_upper = 200)
+        normalizer = Normalizer(in_max = 100, out_max = 200)
         network = FeedForwardNN(normalizer, [1, 2, 1])
         expectation = [148]
         result = network.execute([74])
 
         backpropagator.learn(network, expectation)
-
-
-
-
-
-
