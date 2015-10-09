@@ -69,6 +69,4 @@ class NeuralNetwork(object):
 
         
     def prepair_for_input(self): pass
-
-
-
+    def receive_inputs(self, inputs): pass

@@ -1,8 +1,10 @@
 ﻿import unittest
 from code.src.learning_algorithms.backpropagation import Backpropagator
 from code.src.neurons.receive_all_neuron import ReceiveAllNeuron
+from code.src.data_processing.expectation import Expectation
 from code.src.data_processing.normalizer import Normalizer
 from code.src.neural_networks.feed_forward import FeedForwardNN
+import math
 
 
 
@@ -82,10 +84,22 @@ class BackpropagatorTest(unittest.TestCase):
         normalizer = Normalizer(in_max = 100, out_max = 200)
         network = FeedForwardNN(normalizer, [1, 2, 1])
         expectation = [148]
-        result = network.execute([74])
+        result = network.receive_inputs([74])
 
         backpropagator.learn(network, expectation)
 
 
     def test_teach(self):
-        pass
+        backpropagator = Backpropagator()
+        normalizer = Normalizer(in_min = 0, in_max = 100,
+                                out_min = -1, out_max = 1)
+        network = FeedForwardNN(normalizer, [1, 3, 1])
+        expectations = [Expectation([i], [math.sin(i)])
+                        for i in range(100)]
+        result = backpropagator.teach(network, expectations)
+        
+        # TODO(domenicd): Need to update Backpropagator to account for
+        #                 normalized output, or offer a way to get
+        #                 denormalized output from the neural network.
+        self.assertEqual(result.error, .0001)
+        self.assertEqual(result.epochs, 50)

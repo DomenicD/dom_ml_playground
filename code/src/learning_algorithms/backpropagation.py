@@ -1,38 +1,44 @@
 ﻿from code.src.neural_networks.neural_network_utils import NetworkUtils
 from code.src.neurons.neurons import NeuronType
+import math
 
 
 # http://home.agh.edu.pl/~vlsi/AI/backp_t_en/backprop.html
 # http://www.cse.unsw.edu.au/~cs9417ml/MLP2/
 
 
+class TrainingResult(object):
+    def __init__(self, epochs, error):
+        self.epochs = epochs
+        self.error = error
+
+
+
 # wonder how to compute the contribution of each node
 # during feed forward phase?
-class Expectation(object):
-    def __init__(self, inputs, outputs):
-        self.inputs = inputs
-        self.outputs = outputs
-
-
-
-
 class Backpropagator(object):
     def teach(self, neural_network, expectations,
               acceptable_error = .001, max_iterations = 100,
               time_limit = None):
-        for i in range(max_iterations):
-            self.lesson(neural_network, expectations, .5)
+        epochs = 0
+        within_acceptable_error = False
+        error = 0.0
+        while (epochs < max_iterations and not within_acceptable_error):
+            error = 0.0
+            for expectation in expectations:
+                neural_network.receive_inputs(expectation.inputs)
+                self.learn(neural_network, expectation.outputs, .5)
+                error += sum(map(lambda arr: math.pow(arr[0] - arr[1], 2),
+                                 zip(neural_network.receive_inputs(
+                                     expectation.inputs),
+                                     expectation.outputs)))
 
-    
-    def lesson(self, neural_network, expectations, learning_rate = 1):
-        for expectation in expectations:
-            neural_network.prepair_for_input()
-            for i in range(len(neural_network.input_layer)):
-                neuron = neural_network.input_layer[i]
-                input = expectation.inputs[i]
-                neuron.receive_signal(input)
-            learn(neural_network, expectation.outputs, learning_rate)
+            epochs += 1
+            within_acceptable_error = all(
+                [expectation < acceptable_error 
+                 for output in neural_network.output_layer])
 
+        return TrainingResult(epochs, error)
     
 
     def learn(self, neural_network, expectation, learning_rate = 1):

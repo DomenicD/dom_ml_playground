@@ -22,6 +22,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="code\src\data_processing\expectation.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="code\src\data_processing\__init__.py">
       <SubType>Code</SubType>
     </Compile>

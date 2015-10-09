@@ -47,7 +47,7 @@ class FeedForwardNN(NeuralNetwork):
             neuron.reset()
 
 
-    def execute(self, inputs):
+    def receive_inputs(self, inputs):
         self.prepair_for_input()
         for i in range(len(inputs)):
             input = inputs[i]
