@@ -1,14 +1,11 @@
 ﻿class Normalizer(object):
     """Used to normailze the data going into and coming out of a neural
-    network.
-
-    If out_range is not specified, it will use the in_range.
-    If out_offset is not specified, it will use the in_offset.
+    network.  
 
     """
     def __init__(self, in_min = 0, in_max = 1,
                  out_min = 0, out_max = 1,
-                 norm_min = -3, norm_max = 3):
+                 norm_min = 0, norm_max = 1):
         
         self.in_offset = in_min
         self.in_range = in_max - in_min

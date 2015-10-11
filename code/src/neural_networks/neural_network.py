@@ -1,5 +1,6 @@
-﻿from code.src.neurons.neurons import NeuronType
-
+﻿import random
+from code.src.data_processing.normalizer import Normalizer
+from code.src.neurons.neurons import NeuronType
 
 
 class NeuronIndex(object):
@@ -10,12 +11,19 @@ class NeuronIndex(object):
 
 
 class NeuralNetwork(object):
-    def __init__(self):
+    def __init__(self, normalizer = Normalizer()):
+        self.normalizer = normalizer
         self.layers = []
+
     
     @property
     def num_layers(self):
         return len(self.layers)
+
+
+    @property
+    def num_inputs(self):
+        return len(self.input_layer)
 
 
     @property
@@ -43,12 +51,20 @@ class NeuralNetwork(object):
                 for neuron in layer]
 
 
+    @property
+    def connections(self):
+        return [connection
+                for layer in self.layers
+                for neuron in layer
+                for connection in neuron.out_connections]
+
+
     def add_layer(self, layer):
         self.layers.append(layer)
 
 
     def create_layer(self, count, neuronConstructor):
-        return [neuronConstructor() for n in range(count)]
+        return [neuronConstructor(n) for n in range(count)]
 
 
     def neuron_index(self, neuron):
@@ -67,6 +83,12 @@ class NeuralNetwork(object):
         
         raise IndexError()
 
-        
-    def prepair_for_input(self): pass
+
+    def randomize_connection_weights(self, seed = None, min = -1, max = 1):
+        random.seed(seed)
+        for connection in self.connections:
+            connection.weight = random.uniform(min, max)
+            
+    
     def receive_inputs(self, inputs): pass
+    def prepair_for_input(self): pass

@@ -1,6 +1,6 @@
 ﻿from Queue import Queue
 
-class NetworkUtils(object):
+class NeuralNetworkUtils(object):
     @staticmethod
     def OutputBreadthTraversal(network, action):
         queue = Queue()
@@ -16,7 +16,7 @@ class NetworkUtils(object):
                 action(node)
                 visited[node.id] = True
                 for inbound in node.in_connections:
-                    receiver = inbound.receiver
-                    if not receiver in processed:
-                        queue.put(receiver)
-                        processed.add(receiver)
+                    sender = inbound.sender
+                    if not sender in processed:
+                        queue.put(sender)
+                        processed.add(sender)

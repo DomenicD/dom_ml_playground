@@ -86,17 +86,54 @@ class BackpropagatorTest(unittest.TestCase):
         expectation = [148]
         result = network.receive_inputs([74])
 
-        backpropagator.learn(network, expectation)
+        backpropagator.learn(network, expectation, 1)
+
+
+    def test_calculate_error(self):
+        backpropagator = Backpropagator()
+        error = backpropagator.calculate_error([5.5, 1, -8], [5, -4, 2.5])
+        self.assertAlmostEqual(error, 135.5)
+
+
+    def test_learn(self):
+        backpropagator = Backpropagator()
+        normalizer = Normalizer(in_min = 1, in_max = 15,
+                                out_min = -1, out_max = 1,
+                                norm_min = -3, norm_max = 3)
+        
+        network = FeedForwardNN(normalizer, [1, 2, 2, 1])
+        neurons = network.neurons
+
+        expectations = [
+            Expectation([1], [0.8415]),
+            Expectation([5], [-0.9589]),
+            Expectation([10], [-0.5440]),
+            Expectation([15], [0.6502]),
+            ]
+
+        backpropagator.learn(network, expectations[0], 1)
+
+        self.assertAlmostEqual(neurons[-1].error, -0.001263044541)
+
 
 
     def test_teach(self):
         backpropagator = Backpropagator()
         normalizer = Normalizer(in_min = 0, in_max = 100,
-                                out_min = -1, out_max = 1)
-        network = FeedForwardNN(normalizer, [1, 3, 1])
+                                out_min = -1, out_max = 1,
+                                norm_min = -3, norm_max = 3)
+        
+        network = FeedForwardNN(normalizer, [1, 2, 2, 1])
+        
+        network.randomize_connection_weights(seed = 74)
+
         expectations = [Expectation([i], [math.sin(i)])
-                        for i in range(100)]
-        result = backpropagator.teach(network, expectations)
+                        for i in range(0, 100, 5)]
+        
+        result = backpropagator.teach(network,
+                                      expectations, 
+                                      learning_rate = .2,
+                                      max_iterations = 200)
         
         # TODO(domenicd): Need to update Backpropagator to account for
         #                 normalized output, or offer a way to get

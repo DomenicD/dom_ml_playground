@@ -31,6 +31,7 @@
     <Compile Include="code\src\experiments\feed_forward\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="code\src\neurons\activation_functions\constant_activation.py" />
     <Compile Include="code\src\neurons\activation_functions\sigmoid_activation.py" />
     <Compile Include="code\src\neurons\activation_functions\activation_function.py">
       <SubType>Code</SubType>
@@ -39,6 +40,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="code\src\neurons\neuron_connection.py" />
+    <Compile Include="code\src\neurons\output_only_neuron.py" />
     <Compile Include="code\src\neurons\receive_all_neuron.py">
       <SubType>Code</SubType>
     </Compile>
@@ -53,6 +55,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="code\test\learning_algorithms\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\test\neural_networks\neural_network_utils_test.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="code\test\neural_networks\__init__.py">

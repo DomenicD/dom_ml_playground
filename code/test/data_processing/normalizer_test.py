@@ -5,7 +5,7 @@ class NormalizerTest(unittest.TestCase):
     def test_default_normalizer(self):
         normalizer = Normalizer()
 
-        self.assertAlmostEqual(-1.38, normalizer.norm_input(.27))
+        self.assertAlmostEqual(.27, normalizer.norm_input(.27))
         self.assertAlmostEqual(.27, normalizer.denorm_input(
             normalizer.norm_input(.27)))
 
@@ -14,7 +14,8 @@ class NormalizerTest(unittest.TestCase):
 
 
     def test_norm_input(self):
-        normalizer = Normalizer(in_min = -50, in_max = 50)
+        normalizer = Normalizer(in_min = -50, in_max = 50,
+                                norm_min = -3, norm_max = 3)
         
         self.assertAlmostEqual(-2.94, normalizer.norm_input(-49))
         self.assertAlmostEqual(0, normalizer.norm_input(0))
@@ -22,7 +23,8 @@ class NormalizerTest(unittest.TestCase):
 
 
     def test_denorm_input(self):
-        normalizer = Normalizer(in_min = -50, in_max = 50)
+        normalizer = Normalizer(in_min = -50, in_max = 50,
+                                norm_min = -3, norm_max = 3)
         
         self.assertAlmostEqual(-49, normalizer.denorm_input(-2.94))
         self.assertAlmostEqual(0, normalizer.denorm_input(0))
@@ -30,7 +32,8 @@ class NormalizerTest(unittest.TestCase):
 
 
     def test_norm_output(self):
-        normalizer = Normalizer(out_min = -20, out_max = 70)
+        normalizer = Normalizer(out_min = -20, out_max = 70,
+                                norm_min = -3, norm_max = 3)
         
         self.assertAlmostEqual(-20, normalizer.norm_output(0))
         self.assertAlmostEqual(25, normalizer.norm_output(.5))
@@ -39,7 +42,8 @@ class NormalizerTest(unittest.TestCase):
 
 
     def test_denorm_output(self):
-        normalizer = Normalizer(out_min = -20, out_max = 70)
+        normalizer = Normalizer(out_min = -20, out_max = 70,
+                                norm_min = -3, norm_max = 3)
         
         self.assertAlmostEqual(0, normalizer.denorm_output(-20))
         self.assertAlmostEqual(.5, normalizer.denorm_output(25))

@@ -1,4 +1,4 @@
-﻿from code.src.neural_networks.neural_network_utils import NetworkUtils
+﻿from code.src.neural_networks.neural_network_utils import NeuralNetworkUtils
 from code.src.neurons.neurons import NeuronType
 import math
 
@@ -19,38 +19,46 @@ class TrainingResult(object):
 class Backpropagator(object):
     def teach(self, neural_network, expectations,
               acceptable_error = .001, max_iterations = 100,
-              time_limit = None):
+              time_limit = None, learning_rate = 0.5):
         epochs = 0
         within_acceptable_error = False
         error = 0.0
         while (epochs < max_iterations and not within_acceptable_error):
             error = 0.0
-            for expectation in expectations:
-                neural_network.receive_inputs(expectation.inputs)
-                self.learn(neural_network, expectation.outputs, .5)
-                error += sum(map(lambda arr: math.pow(arr[0] - arr[1], 2),
-                                 zip(neural_network.receive_inputs(
-                                     expectation.inputs),
-                                     expectation.outputs)))
+            for expectation in expectations:                
+                self.learn(neural_network, expectation, learning_rate)                
+                error += self.calculate_error(
+                    neural_network.receive_inputs(expectation.inputs),
+                    expectation.outputs)
 
             epochs += 1
-            within_acceptable_error = all(
-                [expectation < acceptable_error 
-                 for output in neural_network.output_layer])
+            within_acceptable_error = error <= acceptable_error
 
         return TrainingResult(epochs, error)
-    
 
-    def learn(self, neural_network, expectation, learning_rate = 1):
+
+    def calculate_error(self, actual, correct):
+        errors = [math.pow(actual[i] - correct[i], 2)
+                  for i in range(len(actual))]
+        
+        return sum(errors)
+
+
+    def learn(self, neural_network, expectation, learning_rate):
         """This is the actual backpropagation part of the code
         here is where we will perform one propagation iteration
         adjusting the networks's node weights
         """        
-        action = lambda neuron: self.propagate_errors(
-            neural_network, neuron, expectation, learning_rate)
 
-        NetworkUtils.OutputBreadthTraversal(neural_network,
-                                            action)
+        neural_network.receive_inputs(expectation.inputs)
+        denorm_expectation = [
+            neural_network.normalizer.denorm_output(exp_out)
+            for exp_out in expectation.outputs]
+
+        NeuralNetworkUtils.OutputBreadthTraversal(
+            neural_network,
+            lambda neuron: self.propagate_errors(
+                neural_network, neuron, denorm_expectation, learning_rate))
 
 
     def propagate_errors(self, network, neuron, expectations,

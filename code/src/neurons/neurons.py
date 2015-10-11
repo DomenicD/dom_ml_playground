@@ -59,9 +59,10 @@ class Neuron(object):
     # This creates a one way connection from this neuron to the passed in one.
     def connect_to(self, node):
         connection = NeuronConnection(self, node)
-        self.add_outbound(connection)
-        node.add_inbound(connection)        
-        return connection    
+        if node.add_inbound(connection):
+            self.add_outbound(connection)
+            return connection    
+        return None
 
 
     def add_outbound(self, connection):
@@ -71,7 +72,8 @@ class Neuron(object):
 
     def add_inbound(self, connection):
         self.in_connections.add(connection)
-        self.on_inbound_added(connection)    
+        self.on_inbound_added(connection)
+        return True
 
 
     def remove_outbound(self, connection):
