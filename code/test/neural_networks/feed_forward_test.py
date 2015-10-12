@@ -5,18 +5,15 @@ from code.src.neurons.output_only_neuron import OutputOnlyNeuron
 
 class SimpleFeedForwardNNTest(unittest.TestCase):
     def test_input_passes_through_network(self):
-        normalizer = Normalizer(2, 1)
+        normalizer = Normalizer(in_max = 10)
         network = FeedForwardNN(normalizer, [2, 4, 5, 3])
 
-        for input in network.input_layer:
-            input.receive_signal(5.0)
+        network.receive_inputs([5.0, 7.1])
 
         for output in network.output_layer:
             self.assertNotAlmostEqual(output.output, 0.0)
 
-
-
-        sentSignals = [connection.signalSent 
+        sentSignals = [connection.signal_sent 
                        for layer in network.layers 
                        for node in layer 
                        for connection in node.out_connections]

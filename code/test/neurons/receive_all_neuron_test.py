@@ -62,15 +62,15 @@ class ReceiveAllNeuronTest(unittest.TestCase):
         self.assertEqual(connection.sender, sender)
         self.assertEqual(connection.receiver, receiver)
         self.assertEqual(connection.weight, 1.0)
-        self.assertEqual(connection.signalSent, 0.0)
-        self.assertEqual(connection.signalReceived, 0.0)
+        self.assertEqual(connection.signal_sent, 0.0)
+        self.assertEqual(connection.signal_received, 0.0)
 
         connection.weight = 0.5
         sender.receive_signal(7.4)
 
         self.assertEqual(connection.weight, 0.5)
-        self.assertEqual(connection.signalSent, 3.7)
-        self.assertEqual(connection.signalReceived, 7.4)
+        self.assertEqual(connection.signal_sent, 3.7)
+        self.assertEqual(connection.signal_received, 7.4)
 
 
     def test_sigmoid_activation(self):

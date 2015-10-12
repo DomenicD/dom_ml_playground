@@ -19,21 +19,25 @@ class TrainingResult(object):
 class Backpropagator(object):
     def teach(self, neural_network, expectations,
               acceptable_error = .001, max_iterations = 100,
-              time_limit = None, learning_rate = 0.5):
+              time_limit = None, learning_rate = 0.5, error_polling_rate = 10):
         epochs = 0
-        within_acceptable_error = False
         error = 0.0
+        within_acceptable_error = False
+        
         while (epochs < max_iterations and not within_acceptable_error):
-            error = 0.0
             for expectation in expectations:                
-                self.learn(neural_network, expectation, learning_rate)                
-                error += self.calculate_error(
-                    neural_network.receive_inputs(expectation.inputs),
-                    expectation.outputs)
+                self.learn(neural_network, expectation, learning_rate)
 
             epochs += 1
-            within_acceptable_error = error <= acceptable_error
 
+            if epochs % error_polling_rate == 0:
+                error = 0.0
+                for exp in expectations:
+                    error += self.calculate_error(
+                        neural_network.receive_inputs(exp.inputs),
+                        exp.outputs)
+                within_acceptable_error = error < acceptable_error
+            
         return TrainingResult(epochs, error)
 
 
@@ -82,7 +86,7 @@ class Backpropagator(object):
     def adjust_weight(self, connection, learning_rate):        
         connection.weight += (learning_rate * 
                               connection.receiver.error * 
-                              connection.signalSent)
+                              connection.signal_received)
         
 
     def output_error(self, neuron, expectation):        

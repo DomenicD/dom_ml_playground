@@ -71,20 +71,20 @@ class BackpropagatorTest(unittest.TestCase):
         connection_1 = hidden_1.out_connections_list[0]
         backpropagator.adjust_weight(connection_1, 1.1)
         # -0.75 + (1.1 * 0.09754925 * -0.45525)
-        self.assertAlmostEqual(connection_1.weight, -0.7988502)
+        self.assertAlmostEqual(connection_1.weight, -0.68486637)
 
         connection_2 = hidden_2.out_connections_list[0]
         backpropagator.adjust_weight(connection_2, 1.1)
         # -0.25 + (1.1 * 0.09754925 * -0.15175)
-        self.assertAlmostEqual(connection_2.weight, -0.26628341)
+        self.assertAlmostEqual(connection_2.weight, -0.18486637)
 
 
     def test_propagate_errors(self):
         backpropagator = Backpropagator()
         normalizer = Normalizer(in_max = 100, out_max = 200)
         network = FeedForwardNN(normalizer, [1, 2, 1])
-        expectation = [148]
-        result = network.receive_inputs([74])
+        expectation = Expectation([50], [148])
+        result = network.receive_inputs(expectation.inputs)
 
         backpropagator.learn(network, expectation, 1)
 
@@ -102,41 +102,70 @@ class BackpropagatorTest(unittest.TestCase):
                                 norm_min = -3, norm_max = 3)
         
         network = FeedForwardNN(normalizer, [1, 2, 2, 1])
-        neurons = network.neurons
+        network.randomize_connection_weights(seed = 74)
+        neurons = network.neurons        
+        expectation = Expectation([1], [0.8415])
 
-        expectations = [
-            Expectation([1], [0.8415]),
-            Expectation([5], [-0.9589]),
-            Expectation([10], [-0.5440]),
-            Expectation([15], [0.6502]),
-            ]
+        error = backpropagator.calculate_error(
+            network.receive_inputs(expectation.inputs),
+            expectation.outputs)
 
-        backpropagator.learn(network, expectations[0], 1)
+        for i in range(20):
+            last_error = error
+            backpropagator.learn(network, expectation, 1.5)
+            actual = network.receive_inputs(expectation.inputs)
+            print(actual)
+            error = backpropagator.calculate_error(actual, expectation.outputs)
+            self.assertLess(error, last_error)
 
-        self.assertAlmostEqual(neurons[-1].error, -0.001263044541)
 
-
-
-    def test_teach(self):
+    def test_teach_acceptable_error(self):
         backpropagator = Backpropagator()
-        normalizer = Normalizer(in_min = 0, in_max = 100,
-                                out_min = -1, out_max = 1,
-                                norm_min = -3, norm_max = 3)
+        normalizer = Normalizer(in_min = -15, in_max = 15,
+                                out_min = -30, out_max = 30,
+                                norm_min = -2, norm_max = 2)
+        
+        network = FeedForwardNN(normalizer, [1, 3, 1])
+        
+        network.randomize_connection_weights(seed = 74)
+
+        expectations = [Expectation([i], [2*i])
+                        for i in range(-5, 5)]
+
+        result = backpropagator.teach(network,
+                                      expectations, 
+                                      learning_rate = 1.5,
+                                      max_iterations = 2000,
+                                      acceptable_error = .5)
+        
+        self.assertLessEqual(result.error, .5)
+
+        errors = 0
+        for exp in expectations:
+            errors += backpropagator.calculate_error(
+                network.receive_inputs(exp.inputs), exp.outputs)
+
+        self.assertLessEqual(errors, .5)
+        
+
+    def test_teach_max_iterations(self):
+        backpropagator = Backpropagator()
+        normalizer = Normalizer(in_min = -15, in_max = 15,
+                                out_min = -30, out_max = 30,
+                                norm_min = -2, norm_max = 2)
         
         network = FeedForwardNN(normalizer, [1, 2, 2, 1])
         
         network.randomize_connection_weights(seed = 74)
 
-        expectations = [Expectation([i], [math.sin(i)])
-                        for i in range(0, 100, 5)]
+        expectations = [Expectation([i], [2*i])
+                        for i in range(-5, 5)]
         
         result = backpropagator.teach(network,
                                       expectations, 
-                                      learning_rate = .2,
-                                      max_iterations = 200)
+                                      learning_rate = 1.5,
+                                      max_iterations = 123,
+                                      acceptable_error = 0)
         
-        # TODO(domenicd): Need to update Backpropagator to account for
-        #                 normalized output, or offer a way to get
-        #                 denormalized output from the neural network.
-        self.assertEqual(result.error, .0001)
-        self.assertEqual(result.epochs, 50)
+        self.assertEqual(result.epochs, 123)
+    

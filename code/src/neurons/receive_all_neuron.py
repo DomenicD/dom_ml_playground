@@ -10,31 +10,31 @@ class ReceiveAllNeuron(Neuron):
     def __init__(self, activation = SigmoidActivation()):
         # Call inherited class.
         Neuron.__init__(self, activation)
-        self.signalReceivedTracker = {}
+        self.signal_receivedTracker = {}
 
 
     def on_reset(self):
         # gets the neruon ready to fire again
-        for key in self.signalReceivedTracker:
-            self.signalReceivedTracker[key] = False
+        for key in self.signal_receivedTracker:
+            self.signal_receivedTracker[key] = False
 
 
     def on_inbound_added(self, connection):
-        self.signalReceivedTracker[connection.id] = False
+        self.signal_receivedTracker[connection.id] = False
 
 
     def on_inbound_removed(self, connection):
-        self.signalReceivedTracker.pop(connection.id, None)
+        self.signal_receivedTracker.pop(connection.id, None)
 
 
     def on_signal_received(self, value, connection_id):
         # If all signals have been received, the output is set
         # and the node fires.         
-        if (len(self.signalReceivedTracker) and 
-            self.signalReceivedTracker[connection_id]): return
+        if (len(self.signal_receivedTracker) and 
+            self.signal_receivedTracker[connection_id]): return
 
         if (connection_id):
-            self.signalReceivedTracker[connection_id] = True
+            self.signal_receivedTracker[connection_id] = True
 
         if (not self.allSignalsReceived()): return
                
@@ -43,4 +43,4 @@ class ReceiveAllNeuron(Neuron):
 
 
     def allSignalsReceived(self):
-        return all(self.signalReceivedTracker.values())
+        return all(self.signal_receivedTracker.values())

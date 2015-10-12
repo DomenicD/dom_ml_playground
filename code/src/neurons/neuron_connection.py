@@ -9,8 +9,8 @@ class NeuronConnection(object):
         self.receiver = receiver
         self._weight = 1.0
         self.weight = self._weight
-        self.signalSent = 0.0
-        self.signalReceived = 0.0
+        self.signal_sent = 0.0
+        self.signal_received = 0.0
         
 
     @property
@@ -40,9 +40,9 @@ class NeuronConnection(object):
 
 
     def sendSignal(self, value):
-        self.signalReceived = value
-        self.signalSent = value * self.weight        
-        self.receiver.receive_signal(self.signalSent, self.id)
+        self.signal_received = value
+        self.signal_sent = value * self.weight        
+        self.receiver.receive_signal(self.signal_sent, self.id)
 
     def disconnect(self):
         self.sender.remove_outbound(self)
