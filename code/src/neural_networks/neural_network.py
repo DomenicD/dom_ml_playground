@@ -84,7 +84,7 @@ class NeuralNetwork(object):
         raise IndexError()
 
 
-    def randomize_connection_weights(self, seed = None, min = -1, max = 1):
+    def randomize_connection_weights(self, seed = None, min = -0.5, max = 0.5):
         random.seed(seed)
         for connection in self.connections:
             connection.weight = random.uniform(min, max)

@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>9d7ea3e6-d46f-4fd2-b022-c548a7ac450f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>code\test\neural_networks\feed_forward_test.py</StartupFile>
+    <StartupFile>code\src\experiments\feed_forward\function_learning.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -26,6 +26,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="code\src\data_processing\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\src\experiments\feed_forward\function_learning.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="code\src\experiments\feed_forward\__init__.py">
@@ -51,6 +54,7 @@
     <Compile Include="code\test\data_processing\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="code\test\experiments\feed_forward\function_learning_test.py" />
     <Compile Include="code\test\experiments\__init__.py">
       <SubType>Code</SubType>
     </Compile>
@@ -111,6 +115,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="code\test\experiments\feed_forward\" />
     <Folder Include="data\" />
     <Folder Include="code\" />
     <Folder Include="code\src\" />

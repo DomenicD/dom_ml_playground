@@ -19,7 +19,8 @@ class TrainingResult(object):
 class Backpropagator(object):
     def teach(self, neural_network, expectations,
               acceptable_error = .001, max_iterations = 100,
-              time_limit = None, learning_rate = 0.5, error_polling_rate = 10):
+              time_limit = None, learning_rate = 0.5, callback_rate = 10,
+              callback_func = None):
         epochs = 0
         error = 0.0
         within_acceptable_error = False
@@ -30,13 +31,16 @@ class Backpropagator(object):
 
             epochs += 1
 
-            if epochs % error_polling_rate == 0:
+            if epochs % callback_rate == 0:
                 error = 0.0
                 for exp in expectations:
                     error += self.calculate_error(
                         neural_network.receive_inputs(exp.inputs),
                         exp.outputs)
                 within_acceptable_error = error < acceptable_error
+                if callback_func != None:
+                    callback_func(neural_network, expectations,
+                                  TrainingResult(epochs, error))
             
         return TrainingResult(epochs, error)
 
