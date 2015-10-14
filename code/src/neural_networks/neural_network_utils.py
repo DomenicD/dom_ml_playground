@@ -20,3 +20,14 @@ class NeuralNetworkUtils(object):
                     if not sender in processed:
                         queue.put(sender)
                         processed.add(sender)
+
+    
+    @staticmethod
+    def list_of_outputs(neural_network, inputs):
+        """This takes in an array of inputs (array of arrays) and runs them
+        through the neural_network producing an array of outputs. This can be
+        useful for plotting; eg. the inputs are the 'x' values and the outputs
+        are the 'y' values.
+        """
+        return [neural_network.receive_inputs(input) for input in inputs]
+

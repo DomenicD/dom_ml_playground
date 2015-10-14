@@ -1,8 +1,11 @@
-﻿import math;
+﻿import math
+import matplotlib.pyplot as plt
+import threading
 from code.src.learning_algorithms.backpropagation import Backpropagator
 from code.src.data_processing.expectation import Expectation
 from code.src.data_processing.normalizer import Normalizer
 from code.src.neural_networks.feed_forward import FeedForwardNN
+from code.src.neural_networks.neural_network_utils import NeuralNetworkUtils
 
 
 
@@ -39,24 +42,48 @@ def learn_function(fn, in_min, in_max):
     network = FeedForwardNN(normalizer, [1, 3, 1])
     network.randomize_connection_weights()
 
-    results = backpropagator.teach(
-        network, expectations, learning_rate = 1.5, max_iterations = 10000,
-        acceptable_error = 1, callback_rate = 100,
-        callback_func = monitor_neural_network)
+    
+    config_fit_tracker(network, expectations)
 
+    # TODO(domenicd): There are some issues between updating the plot and
+    #                 the data in different threads. The plot is not movable
+    #                 for some reason.
+    training_thread = threading.Thread(target=lambda: backpropagator.teach(
+        network, expectations, learning_rate = 1.5, max_iterations = 10000,
+        acceptable_error = 1, callback_func = update_fit_plot))
+    training_thread.daemon = True
+    training_thread.start()
+
+    plt.figure('Fit Tracker').show()
+
+    training_thread.join()
     return network
         
 
-# TODO(domenicd): Need to plot these to see what is going on. The errors are
-#                 super large right now e+11 was the lowest achived in 10000
-#                 iterations.
-def monitor_neural_network(neural_network, expectations, training_result):
-    print(training_result.epochs)
-    print(training_result.error)
+def config_fit_tracker(neural_network, expectations):
+    x = [e.inputs[0] for e in expectations]
+    goal = [e.outputs[0] for e in expectations]
+    current = NeuralNetworkUtils.list_of_outputs(neural_network,
+        [e.inputs for e in expectations])
+    
+    fig = plt.figure('Fit Tracker')    
+    ax = fig.add_subplot(111)
+    ax.plot(x, goal)
+    ax.plot(x, current)
+    fig.canvas.draw()
+
+    
+def update_fit_plot(neural_network, expectations, training_result):
+    fig = plt.figure('Fit Tracker')
+    if len(fig.axes) > 0 and len(fig.axes[0].lines) > 1:
+        ax = fig.axes[0]
+        line = ax.lines[1]
+        line.set_ydata(NeuralNetworkUtils.list_of_outputs(neural_network,
+            [e.inputs for e in expectations]))
+        fig.canvas.draw()
 
 
-# Have to add location of git project to PYTHONPATH system variable if you
-# want to run this script directly.
+# Please see README.md if you are having trouble getting this to run.
 if __name__ == '__main__':
     fn = (lambda x: [math.pow(x, 4) + math.pow(x, 3) + math.pow(x, 2) + 
           x + 4])
