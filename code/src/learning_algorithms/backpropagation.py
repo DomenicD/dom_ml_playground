@@ -1,6 +1,7 @@
 ﻿from code.src.neural_networks.neural_network_utils import NeuralNetworkUtils
 from code.src.neurons.neurons import NeuronType
 import math
+import random
 
 
 # http://home.agh.edu.pl/~vlsi/AI/backp_t_en/backprop.html
@@ -26,7 +27,9 @@ class Backpropagator(object):
         within_acceptable_error = False
         
         while (epochs < max_iterations and not within_acceptable_error):
-            for expectation in expectations:                
+            sample = list(expectations)
+            #random.shuffle(sample)
+            for expectation in sample:                
                 self.learn(neural_network, expectation, learning_rate)
 
             epochs += 1

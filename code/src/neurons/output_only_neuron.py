@@ -1,5 +1,5 @@
 ﻿from code.src.neurons.neurons import Neuron
-from code.src.neurons.activation_functions.constant_activation import ConstantActivation
+from code.src.neurons.activation_functions.linear_activation import LinearActivation
 
 
 
@@ -7,7 +7,7 @@ from code.src.neurons.activation_functions.constant_activation import ConstantAc
 class OutputOnlyNeuron(Neuron):
     """This nueron has no inbound connections and always fires the same value.
     """
-    def __init__(self, activation = ConstantActivation()):
+    def __init__(self, activation = LinearActivation()):
         Neuron.__init__(self, activation)
 
 

@@ -1,5 +1,7 @@
 ﻿from code.src.neurons.neurons import Neuron
+from code.src.neurons.activation_functions.tanh_activation import TanhActivation
 from code.src.neurons.activation_functions.sigmoid_activation import SigmoidActivation
+from code.src.neurons.activation_functions.sine_activation import SineActivation
 
 
 
@@ -7,7 +9,7 @@ from code.src.neurons.activation_functions.sigmoid_activation import SigmoidActi
 # signals to have been received before sending any of
 # its connections.
 class ReceiveAllNeuron(Neuron):
-    def __init__(self, activation = SigmoidActivation()):
+    def __init__(self, activation = SineActivation()):
         # Call inherited class.
         Neuron.__init__(self, activation)
         self.signal_receivedTracker = {}

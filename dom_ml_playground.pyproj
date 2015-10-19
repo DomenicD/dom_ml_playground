@@ -34,7 +34,9 @@
     <Compile Include="code\src\experiments\feed_forward\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="code\src\neurons\activation_functions\constant_activation.py" />
+    <Compile Include="code\src\neurons\activation_functions\linear_activation.py" />
+    <Compile Include="code\src\neurons\activation_functions\sine_activation.py" />
+    <Compile Include="code\src\neurons\activation_functions\tanh_activation.py" />
     <Compile Include="code\src\neurons\activation_functions\sigmoid_activation.py" />
     <Compile Include="code\src\neurons\activation_functions\activation_function.py">
       <SubType>Code</SubType>

@@ -4,16 +4,18 @@ from code.src.data_processing.normalizer import Normalizer
 from code.src.neural_networks.neural_network import NeuralNetwork
 from code.src.neurons.receive_all_neuron import ReceiveAllNeuron
 from code.src.neurons.output_only_neuron import OutputOnlyNeuron
+from code.src.neurons.activation_functions.linear_activation import LinearActivation
 
 
 
 class FeedForwardNN(NeuralNetwork):
     def __init__(self, normalizer = Normalizer(), structure = [1, 5, 1],
-                 has_bias_nodes = True):        
+                 has_bias_nodes = True, is_regression = False):        
         NeuralNetwork.__init__(self, normalizer)
 
         self.structure = structure
         self.has_bias_nodes = has_bias_nodes
+        self.is_regression = is_regression
         self.bias_nodes = []
 
         num_layers = len(structure)
@@ -50,6 +52,9 @@ class FeedForwardNN(NeuralNetwork):
             bias_node = OutputOnlyNeuron()
             self.bias_nodes.append(bias_node)
             return bias_node
+        
+        #if self.is_regression and current_layer_index == last_layer_index:
+        #    return ReceiveAllNeuron(activation=LinearActivation())
 
         return ReceiveAllNeuron()
 

@@ -1,5 +1,6 @@
 ﻿import math
 import matplotlib.pyplot as plt
+import numpy as np
 from code.src.learning_algorithms.backpropagation import Backpropagator
 from code.src.data_processing.expectation import Expectation
 from code.src.data_processing.normalizer import Normalizer
@@ -9,9 +10,9 @@ from code.src.neural_networks.neural_network_utils import NeuralNetworkUtils
 
 
     
-def learn_function(fn, in_min, in_max):
+def learn_function(fn, in_min, in_max):    
     expectations = [Expectation([i], fn(i))
-                    for i in range(in_min, in_max + 1)]
+                    for i in np.linspace(in_min, in_max + 1, num=100)]
 
     in_range = in_max - in_min
     in_min = in_min - .1 * in_range
@@ -36,15 +37,15 @@ def learn_function(fn, in_min, in_max):
         
     normalizer = Normalizer(in_min = in_min, in_max = in_max,
                             out_min = out_min, out_max = out_max,
-                            norm_min = -6, norm_max = 6)
+                            norm_min = -10, norm_max = 10)
         
-    network = FeedForwardNN(normalizer, [1, 5,5, 1])
-    network.randomize_connection_weights(min=-6, max=6)
+    network = FeedForwardNN(normalizer, [1, 3,3, 1], is_regression=True)
+    network.randomize_connection_weights(min=-1, max=1)
 
     show_fit_tracker(network, expectations)
 
     backpropagator.teach(
-        network, expectations, learning_rate = 4, max_iterations = 10000,
+        network, expectations, learning_rate = .008, max_iterations = 30000,
         acceptable_error = 1, callback_func = update_fit_plot)
 
     return network
@@ -79,4 +80,5 @@ def update_fit_plot(neural_network, expectations, training_result):
 # Please see README.md if you are having trouble getting this to run.
 if __name__ == '__main__':
     fn = (lambda x: [(math.pow(x, 3) + math.pow(x, 2) + x + 4) * math.sin(x)])
-    learn_function(fn, -20, 20)
+    # fn = (lambda x: [(math.pow(x, 3) + math.pow(x, 2) + x + 4)])
+    learn_function(fn, -25, 25)
