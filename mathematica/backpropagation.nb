@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    609800,      10595]
-NotebookOptionsPosition[    607911,      10533]
-NotebookOutlinePosition[    608285,      10549]
-CellTagsIndexPosition[    608242,      10546]
+NotebookDataLength[    608805,      10568]
+NotebookOptionsPosition[    607076,      10511]
+NotebookOutlinePosition[    607450,      10527]
+CellTagsIndexPosition[    607407,      10524]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -10056,28 +10056,6 @@ IUPzFWJkid4BjfT8FLA2NC2e4/VU8g9T0lav
    3.6552531090697165`*^9, 3.655253209299036*^9, 3.6552533425987234`*^9}]
 }, Open  ]],
 
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"Export", "[", 
-  RowBox[{
-  "\"\<C:\\\\Users\\\\djdonato\\\\Desktop\\\\nn_fit.gif\>\"", ",", "%69", 
-   ",", "\"\<GIF\>\""}], "]"}]], "Input",
- NumberMarks->False],
-
-Cell[BoxData["\<\"C:\\\\Users\\\\djdonato\\\\Desktop\\\\nn_fit.gif\"\>"], \
-"Output",
- CellChangeTimes->{3.655253419414714*^9}]
-}, Open  ]],
-
-Cell[BoxData[""], "Input",
- CellChangeTimes->{{3.655202839650384*^9, 3.6552029051947384`*^9}, {
-   3.655202942741369*^9, 3.6552030014595413`*^9}, 3.6552031214679275`*^9, {
-   3.6552041021030073`*^9, 3.6552041031607876`*^9}, {3.655205688886263*^9, 
-   3.655205758632894*^9}, {3.6552057962546463`*^9, 3.655205935305358*^9}, {
-   3.6552059748184786`*^9, 3.6552060610118876`*^9}, {3.6552061558233457`*^9, 
-   3.655206187305676*^9}, {3.6552065338492603`*^9, 3.6552065834186945`*^9}}],
-
 Cell[BoxData[{
  RowBox[{
   RowBox[{
@@ -10591,12 +10569,7 @@ Cell[578959, 9866, 1643, 50, 162, "Input"],
 Cell[580605, 9918, 2212, 37, 101, "Output"],
 Cell[582820, 9957, 5414, 98, 356, "Output"]
 }, Open  ]],
-Cell[CellGroupData[{
-Cell[588271, 10060, 187, 5, 45, "Input"],
-Cell[588461, 10067, 127, 2, 44, "Output"]
-}, Open  ]],
-Cell[588603, 10072, 478, 6, 45, "Input"],
-Cell[589084, 10080, 18823, 451, 2706, "Input"]
+Cell[588249, 10058, 18823, 451, 2706, "Input"]
 }
 ]
 *)

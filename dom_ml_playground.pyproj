@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>9d7ea3e6-d46f-4fd2-b022-c548a7ac450f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>code\src\experiments\feed_forward\function_learning.py</StartupFile>
+    <StartupFile>code\tutorials\theano\multilayer_perceptron.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -78,6 +78,11 @@
     <Compile Include="code\test\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="code\tutorials\theano\deep_convolutional.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\tutorials\theano\__init__.py" />
+    <Compile Include="code\tutorials\__init__.py" />
     <Compile Include="code\__init__.py">
       <SubType>Code</SubType>
     </Compile>
@@ -109,10 +114,16 @@
     <Compile Include="code\src\experiments\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="tutorials\theano\logistic_regression\theano_logistic_regression.py">
+    <Compile Include="code\tutorials\theano\logistic_regression.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="code\src\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\tutorials\theano\mathematica_interop.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="code\tutorials\theano\multilayer_perceptron.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -135,9 +146,8 @@
     <Folder Include="code\test\neural_networks\" />
     <Folder Include="code\test\neurons\" />
     <Folder Include="code\test\neurons\activation_functions\" />
-    <Folder Include="tutorials\" />
-    <Folder Include="tutorials\theano\" />
-    <Folder Include="tutorials\theano\logistic_regression\" />
+    <Folder Include="code\tutorials\" />
+    <Folder Include="code\tutorials\theano\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitattributes" />
